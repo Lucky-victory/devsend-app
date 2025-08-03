@@ -1,5 +1,6 @@
 {
   "node": {
-    "18": true
+    "18": true,
+    "externalPackages": ["@react-email/render", "@react-email/components"]
   }
 }
