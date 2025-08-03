@@ -1,12 +1,16 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { ConvexProvider as BaseConvexProvider } from "convex/react"
-import { ConvexReactClient } from "convex/react"
-
-const convex = new ConvexReactClient(process.env.NEXT_PUBLIC_CONVEX_URL!)
+import { ConvexProvider as BaseConvexProvider } from "convex/react";
+import { convex } from "@/lib/convex-client";
+import { Toaster } from "@/components/ui/sonner";
 
 export function ConvexProvider({ children }: { children: React.ReactNode }) {
-  return <BaseConvexProvider client={convex}>{children}</BaseConvexProvider>
+  return (
+    <BaseConvexProvider client={convex}>
+      {children}
+      <Toaster />
+    </BaseConvexProvider>
+  );
 }

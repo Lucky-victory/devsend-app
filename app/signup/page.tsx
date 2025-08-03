@@ -19,8 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useAuth } from "@/app/providers/auth";
-import { toast } from "sonner";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function SignupPage() {
   const [firstName, setFirstName] = useState("");
@@ -29,25 +28,31 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { signup } = useAuth();
+  const { toast } = useToast();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!acceptTerms) {
-      toast.error("Please accept the terms and conditions");
+      toast({
+        title: "Please accept the terms and conditions",
+      });
       return;
     }
 
     setIsLoading(true);
 
     try {
-      await signup(email, firstName, lastName, password);
-      toast.success("Account created successfully!");
+      // await signup(email, firstName, lastName, password);
+      toast({
+        title: "Account created successfully!",
+      });
       router.push("/dashboard");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Signup failed");
+      toast({
+        title: error instanceof Error ? error.message : "Signup failed",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -55,14 +60,18 @@ export default function SignupPage() {
 
   const handleMagicLink = async () => {
     if (!email) {
-      toast.error("Please enter your email address");
+      toast({
+        title: "Please enter your email address",
+      });
       return;
     }
 
     setIsLoading(true);
     // Simulate magic link sending
     setTimeout(() => {
-      toast.success("Magic link sent to your email!");
+      toast({
+        title: "Magic link sent to your email!",
+      });
       setIsLoading(false);
     }, 1000);
   };

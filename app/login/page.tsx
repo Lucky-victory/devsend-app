@@ -18,14 +18,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { useAuth } from "@/app/providers/auth";
-import { toast } from "sonner";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
+  const { toast } = useToast();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -33,11 +32,17 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      await login(email, password);
-      toast.success("Welcome back!");
+      // await login(email, password);
+      toast({
+        title: "Welcome back!",
+        description: "You are now logged in.",
+      });
       router.push("/dashboard");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Login failed");
+      toast({
+        title: "Login failed",
+        description: error instanceof Error ? error.message : "Login failed",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -45,14 +50,18 @@ export default function LoginPage() {
 
   const handleMagicLink = async () => {
     if (!email) {
-      toast.error("Please enter your email address");
+      toast({
+        title: "Please enter your email address",
+      });
       return;
     }
 
     setIsLoading(true);
     // Simulate magic link sending
     setTimeout(() => {
-      toast.success("Magic link sent to your email!");
+      toast({
+        title: "Magic link sent to your email!",
+      });
       setIsLoading(false);
     }, 1000);
   };

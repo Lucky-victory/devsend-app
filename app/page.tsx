@@ -1,18 +1,32 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { ArrowRight, Code, Mail, BarChart3, Zap, Shield, Users } from "lucide-react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { ThemeToggle } from "@/components/shared/theme-toggle"
+import { motion } from "framer-motion";
+import {
+  ArrowRight,
+  Code,
+  Mail,
+  BarChart3,
+  Zap,
+  Shield,
+  Users,
+} from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ThemeToggle } from "@/components/shared/theme-toggle";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 60 },
   animate: { opacity: 1, y: 0 },
   transition: { duration: 0.6 },
-}
+};
 
 const staggerContainer = {
   animate: {
@@ -20,7 +34,7 @@ const staggerContainer = {
       staggerChildren: 0.1,
     },
   },
-}
+};
 
 export default function LandingPage() {
   return (
@@ -35,13 +49,22 @@ export default function LandingPage() {
             <span className="text-xl font-bold">DevSend</span>
           </div>
           <nav className="hidden md:flex items-center space-x-6">
-            <Link href="#features" className="text-sm font-medium hover:text-primary transition-colors">
+            <Link
+              href="#features"
+              className="text-sm font-medium hover:text-primary transition-colors"
+            >
               Features
             </Link>
-            <Link href="#pricing" className="text-sm font-medium hover:text-primary transition-colors">
+            <Link
+              href="#pricing"
+              className="text-sm font-medium hover:text-primary transition-colors"
+            >
               Pricing
             </Link>
-            <Link href="/login" className="text-sm font-medium hover:text-primary transition-colors">
+            <Link
+              href="/login"
+              className="text-sm font-medium hover:text-primary transition-colors"
+            >
               Login
             </Link>
             <ThemeToggle />
@@ -65,22 +88,40 @@ export default function LandingPage() {
               Built for Developers
             </Badge>
           </motion.div>
-          <motion.h1 className="text-4xl font-bold tracking-tight sm:text-6xl md:text-7xl" variants={fadeInUp}>
+          <motion.h1
+            className="text-4xl font-bold tracking-tight sm:text-6xl md:text-7xl"
+            variants={fadeInUp}
+          >
             Email Campaigns
-            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"> Made Simple</span>
+            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              {" "}
+              Made Simple
+            </span>
           </motion.h1>
-          <motion.p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground" variants={fadeInUp}>
-            Create, manage, and send beautiful email campaigns with code or visual editors. Built specifically for
-            developers, indie hackers, and small teams who value simplicity and power.
+          <motion.p
+            className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground"
+            variants={fadeInUp}
+          >
+            Create, manage, and send beautiful email campaigns with code or
+            visual editors. Built specifically for developers, indie hackers,
+            and small teams who value simplicity and power.
           </motion.p>
-          <motion.div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center" variants={fadeInUp}>
+          <motion.div
+            className="mt-10 flex flex-col sm:flex-row gap-4 justify-center"
+            variants={fadeInUp}
+          >
             <Button size="lg" asChild className="text-base">
               <Link href="/signup">
                 Start Building <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" asChild className="text-base bg-transparent">
-              <Link href="/demo">View Demo</Link>
+            <Button
+              size="lg"
+              variant="outline"
+              asChild
+              className="text-base bg-transparent"
+            >
+              <Link href="#">View Demo</Link>
             </Button>
           </motion.div>
         </motion.div>
@@ -96,8 +137,12 @@ export default function LandingPage() {
           variants={staggerContainer}
         >
           <motion.div className="text-center mb-16" variants={fadeInUp}>
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Everything you need to succeed</h2>
-            <p className="mt-4 text-lg text-muted-foreground">Powerful features designed with developers in mind</p>
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              Everything you need to succeed
+            </h2>
+            <p className="mt-4 text-lg text-muted-foreground">
+              Powerful features designed with developers in mind
+            </p>
           </motion.div>
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -105,32 +150,38 @@ export default function LandingPage() {
               {
                 icon: Code,
                 title: "Code-First Templates",
-                description: "Write email templates in React/TSX with full TypeScript support and live preview.",
+                description:
+                  "Write email templates in React/TSX with full TypeScript support and live preview.",
               },
               {
                 icon: Mail,
                 title: "Visual Editor",
-                description: "Drag-and-drop email builder powered by Unlayer for non-technical team members.",
+                description:
+                  "Drag-and-drop email builder powered by Unlayer for non-technical team members.",
               },
               {
                 icon: BarChart3,
                 title: "Real-time Analytics",
-                description: "Track opens, clicks, bounces, and campaign performance with live dashboards.",
+                description:
+                  "Track opens, clicks, bounces, and campaign performance with live dashboards.",
               },
               {
                 icon: Zap,
                 title: "Lightning Fast",
-                description: "Built on modern tech stack for optimal performance and developer experience.",
+                description:
+                  "Built on modern tech stack for optimal performance and developer experience.",
               },
               {
                 icon: Shield,
                 title: "Reliable Delivery",
-                description: "Powered by Resend API for high deliverability and inbox placement.",
+                description:
+                  "Powered by Resend API for high deliverability and inbox placement.",
               },
               {
                 icon: Users,
                 title: "Team Collaboration",
-                description: "Invite team members, manage permissions, and collaborate on campaigns.",
+                description:
+                  "Invite team members, manage permissions, and collaborate on campaigns.",
               },
             ].map((feature, index) => (
               <motion.div key={index} variants={fadeInUp}>
@@ -142,7 +193,9 @@ export default function LandingPage() {
                     <CardTitle className="text-xl">{feature.title}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <CardDescription className="text-base">{feature.description}</CardDescription>
+                    <CardDescription className="text-base">
+                      {feature.description}
+                    </CardDescription>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -161,8 +214,12 @@ export default function LandingPage() {
           variants={staggerContainer}
         >
           <motion.div className="text-center mb-16" variants={fadeInUp}>
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Simple, transparent pricing</h2>
-            <p className="mt-4 text-lg text-muted-foreground">Choose the plan that fits your needs</p>
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              Simple, transparent pricing
+            </h2>
+            <p className="mt-4 text-lg text-muted-foreground">
+              Choose the plan that fits your needs
+            </p>
           </motion.div>
 
           <div className="grid gap-8 lg:grid-cols-3">
@@ -171,7 +228,12 @@ export default function LandingPage() {
                 name: "Starter",
                 price: "$9",
                 description: "Perfect for indie hackers and small projects",
-                features: ["Up to 1,000 contacts", "5,000 emails/month", "Basic analytics", "Email support"],
+                features: [
+                  "Up to 1,000 contacts",
+                  "5,000 emails/month",
+                  "Basic analytics",
+                  "Email support",
+                ],
               },
               {
                 name: "Pro",
@@ -204,7 +266,9 @@ export default function LandingPage() {
                   className={`h-full ${plan.popular ? "ring-2 ring-primary" : ""} glassmorphism hover:shadow-xl transition-all duration-300`}
                 >
                   <CardHeader>
-                    {plan.popular && <Badge className="w-fit mb-2">Most Popular</Badge>}
+                    {plan.popular && (
+                      <Badge className="w-fit mb-2">Most Popular</Badge>
+                    )}
                     <CardTitle className="text-2xl">{plan.name}</CardTitle>
                     <div className="flex items-baseline">
                       <span className="text-4xl font-bold">{plan.price}</span>
@@ -221,7 +285,10 @@ export default function LandingPage() {
                         </li>
                       ))}
                     </ul>
-                    <Button className="w-full" variant={plan.popular ? "default" : "outline"}>
+                    <Button
+                      className="w-full"
+                      variant={plan.popular ? "default" : "outline"}
+                    >
                       Get Started
                     </Button>
                   </CardContent>
@@ -246,7 +313,8 @@ export default function LandingPage() {
               Ready to transform your email campaigns?
             </h2>
             <p className="text-lg text-muted-foreground mb-8">
-              Join thousands of developers who trust DevSend for their email marketing needs.
+              Join thousands of developers who trust DevSend for their email
+              marketing needs.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
@@ -273,7 +341,9 @@ export default function LandingPage() {
                 </div>
                 <span className="text-xl font-bold">DevSend</span>
               </div>
-              <p className="text-sm text-muted-foreground">Email campaigns made simple for developers.</p>
+              <p className="text-sm text-muted-foreground">
+                Email campaigns made simple for developers.
+              </p>
             </div>
             <div>
               <h3 className="font-semibold mb-4">Product</h3>
@@ -357,5 +427,5 @@ export default function LandingPage() {
         </div>
       </footer>
     </div>
-  )
+  );
 }
