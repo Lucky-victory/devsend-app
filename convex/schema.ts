@@ -1,5 +1,5 @@
-import { defineSchema, defineTable } from "convex/schema"
-import { v } from "convex/values"
+import { defineSchema, defineTable } from "convex/server";
+import { v } from "convex/values";
 
 export default defineSchema({
   users: defineTable({
@@ -28,7 +28,12 @@ export default defineSchema({
   workspaceMembers: defineTable({
     workspaceId: v.id("workspaces"),
     userId: v.id("users"),
-    role: v.union(v.literal("owner"), v.literal("admin"), v.literal("editor"), v.literal("viewer")),
+    role: v.union(
+      v.literal("owner"),
+      v.literal("admin"),
+      v.literal("editor"),
+      v.literal("viewer")
+    ),
     invitedAt: v.number(),
     joinedAt: v.optional(v.number()),
   })
@@ -55,7 +60,11 @@ export default defineSchema({
     email: v.string(),
     firstName: v.optional(v.string()),
     lastName: v.optional(v.string()),
-    status: v.union(v.literal("subscribed"), v.literal("unsubscribed"), v.literal("bounced")),
+    status: v.union(
+      v.literal("subscribed"),
+      v.literal("unsubscribed"),
+      v.literal("bounced")
+    ),
     tags: v.array(v.string()),
     customFields: v.optional(v.object({})),
     subscribedAt: v.number(),
@@ -79,7 +88,7 @@ export default defineSchema({
       v.literal("scheduled"),
       v.literal("sending"),
       v.literal("sent"),
-      v.literal("paused"),
+      v.literal("paused")
     ),
     scheduledAt: v.optional(v.number()),
     sentAt: v.optional(v.number()),
@@ -116,7 +125,7 @@ export default defineSchema({
       v.literal("clicked"),
       v.literal("bounced"),
       v.literal("complained"),
-      v.literal("unsubscribed"),
+      v.literal("unsubscribed")
     ),
     eventData: v.optional(v.object({})),
     timestamp: v.number(),
@@ -131,18 +140,31 @@ export default defineSchema({
   workflows: defineTable({
     workspaceId: v.id("workspaces"),
     name: v.string(),
-    type: v.union(v.literal("drip"), v.literal("trigger"), v.literal("sequence")),
+    type: v.union(
+      v.literal("drip"),
+      v.literal("trigger"),
+      v.literal("sequence")
+    ),
     trigger: v.object({
-      type: v.union(v.literal("signup"), v.literal("tag_added"), v.literal("date"), v.literal("behavior")),
+      type: v.union(
+        v.literal("signup"),
+        v.literal("tag_added"),
+        v.literal("date"),
+        v.literal("behavior")
+      ),
       conditions: v.object({}),
     }),
     steps: v.array(
       v.object({
-        type: v.union(v.literal("email"), v.literal("wait"), v.literal("condition")),
+        type: v.union(
+          v.literal("email"),
+          v.literal("wait"),
+          v.literal("condition")
+        ),
         templateId: v.optional(v.id("templates")),
         delay: v.optional(v.number()), // in hours
         conditions: v.optional(v.object({})),
-      }),
+      })
     ),
     isActive: v.boolean(),
     createdBy: v.id("users"),
@@ -154,7 +176,12 @@ export default defineSchema({
     workflowId: v.id("workflows"),
     contactId: v.id("contacts"),
     currentStep: v.number(),
-    status: v.union(v.literal("running"), v.literal("completed"), v.literal("paused"), v.literal("failed")),
+    status: v.union(
+      v.literal("running"),
+      v.literal("completed"),
+      v.literal("paused"),
+      v.literal("failed")
+    ),
     startedAt: v.number(),
     completedAt: v.optional(v.number()),
     nextRunAt: v.optional(v.number()),
@@ -167,7 +194,11 @@ export default defineSchema({
     workspaceId: v.id("workspaces"),
     name: v.string(),
     campaignId: v.id("campaigns"),
-    testType: v.union(v.literal("subject"), v.literal("content"), v.literal("sender")),
+    testType: v.union(
+      v.literal("subject"),
+      v.literal("content"),
+      v.literal("sender")
+    ),
     variants: v.array(
       v.object({
         name: v.string(),
@@ -175,11 +206,19 @@ export default defineSchema({
         subject: v.optional(v.string()),
         fromName: v.optional(v.string()),
         percentage: v.number(),
-      }),
+      })
     ),
     testDuration: v.number(), // in hours
-    winnerMetric: v.union(v.literal("open_rate"), v.literal("click_rate"), v.literal("conversion_rate")),
-    status: v.union(v.literal("running"), v.literal("completed"), v.literal("paused")),
+    winnerMetric: v.union(
+      v.literal("open_rate"),
+      v.literal("click_rate"),
+      v.literal("conversion_rate")
+    ),
+    status: v.union(
+      v.literal("running"),
+      v.literal("completed"),
+      v.literal("paused")
+    ),
     winnerId: v.optional(v.string()),
     startedAt: v.number(),
     completedAt: v.optional(v.number()),
@@ -216,10 +255,10 @@ export default defineSchema({
             v.literal("not_contains"),
             v.literal("greater_than"),
             v.literal("less_than"),
-            v.literal("in_last_days"),
+            v.literal("in_last_days")
           ),
           value: v.any(),
-        }),
+        })
       ),
       logic: v.union(v.literal("and"), v.literal("or")),
     }),
@@ -246,18 +285,26 @@ export default defineSchema({
   deliverabilityReports: defineTable({
     workspaceId: v.id("workspaces"),
     campaignId: v.optional(v.id("campaigns")),
-    reportType: v.union(v.literal("domain"), v.literal("ip"), v.literal("content")),
+    reportType: v.union(
+      v.literal("domain"),
+      v.literal("ip"),
+      v.literal("content")
+    ),
     score: v.number(),
     issues: v.array(
       v.object({
         type: v.string(),
-        severity: v.union(v.literal("low"), v.literal("medium"), v.literal("high")),
+        severity: v.union(
+          v.literal("low"),
+          v.literal("medium"),
+          v.literal("high")
+        ),
         message: v.string(),
         suggestion: v.string(),
-      }),
+      })
     ),
     generatedAt: v.number(),
   })
     .index("by_workspace", ["workspaceId"])
     .index("by_campaign", ["campaignId"]),
-})
+});
