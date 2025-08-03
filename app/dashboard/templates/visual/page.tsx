@@ -1,44 +1,50 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { motion } from "framer-motion"
-import { ArrowLeft, Send, Loader2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import Link from "next/link"
-import { VisualEditor } from "@/components/email-builder/visual-editor"
-import { useAuth } from "@/lib/auth"
-import { useMutation } from "convex/react"
-import { api } from "@/convex/_generated/api"
-import { toast } from "sonner"
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { ArrowLeft, Send, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import Link from "next/link";
+import { VisualEditor } from "@/components/email-builder/visual-editor";
+import { useAuth } from "@/app/providers/auth";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { toast } from "sonner";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
   transition: { duration: 0.5 },
-}
+};
 
 export default function VisualEditorPage() {
-  const [templateName, setTemplateName] = useState("Visual Email Template")
-  const [templateDesign, setTemplateDesign] = useState<any>(null)
-  const [previewHtml, setPreviewHtml] = useState("")
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false)
-  const [isSaving, setIsSaving] = useState(false)
-  const [testEmail, setTestEmail] = useState("")
-  const [isSendingTest, setIsSendingTest] = useState(false)
+  const [templateName, setTemplateName] = useState("Visual Email Template");
+  const [templateDesign, setTemplateDesign] = useState<any>(null);
+  const [previewHtml, setPreviewHtml] = useState("");
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [testEmail, setTestEmail] = useState("");
+  const [isSendingTest, setIsSendingTest] = useState(false);
 
-  const { currentWorkspace, user } = useAuth()
-  const createTemplate = useMutation(api.templates.createTemplate)
+  const { currentWorkspace, user } = useAuth();
+  const createTemplate = useMutation(api.templates.createTemplate);
 
   const handleSave = async (design: any) => {
     if (!currentWorkspace || !user) {
-      toast.error("Please log in to save templates")
-      return
+      toast.error("Please log in to save templates");
+      return;
     }
 
-    setIsSaving(true)
+    setIsSaving(true);
     try {
       await createTemplate({
         workspaceId: currentWorkspace._id,
@@ -46,39 +52,39 @@ export default function VisualEditorPage() {
         type: "visual",
         content: JSON.stringify(design),
         createdBy: user._id,
-      })
+      });
 
-      setTemplateDesign(design)
-      toast.success("Template saved successfully!")
+      setTemplateDesign(design);
+      toast.success("Template saved successfully!");
     } catch (error) {
-      toast.error("Failed to save template")
+      toast.error("Failed to save template");
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
-  }
+  };
 
   const handlePreview = (html: string) => {
-    setPreviewHtml(html)
-    setIsPreviewOpen(true)
-  }
+    setPreviewHtml(html);
+    setIsPreviewOpen(true);
+  };
 
   const handleSendTest = async () => {
     if (!testEmail || !previewHtml) {
-      toast.error("Please enter a test email and generate preview first")
-      return
+      toast.error("Please enter a test email and generate preview first");
+      return;
     }
 
-    setIsSendingTest(true)
+    setIsSendingTest(true);
     try {
       // In a real app, you'd call your email sending API
-      await new Promise((resolve) => setTimeout(resolve, 2000)) // Simulate API call
-      toast.success(`Test email sent to ${testEmail}!`)
+      await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate API call
+      toast.success(`Test email sent to ${testEmail}!`);
     } catch (error) {
-      toast.error("Failed to send test email")
+      toast.error("Failed to send test email");
     } finally {
-      setIsSendingTest(false)
+      setIsSendingTest(false);
     }
-  }
+  };
 
   return (
     <motion.div
@@ -97,8 +103,12 @@ export default function VisualEditorPage() {
               </Link>
             </Button>
             <div>
-              <h1 className="text-3xl font-bold tracking-tight">Visual Email Builder</h1>
-              <p className="text-muted-foreground">Create beautiful emails with drag-and-drop</p>
+              <h1 className="text-3xl font-bold tracking-tight">
+                Visual Email Builder
+              </h1>
+              <p className="text-muted-foreground">
+                Create beautiful emails with drag-and-drop
+              </p>
             </div>
           </div>
           <div className="flex items-center space-x-2">
@@ -130,8 +140,14 @@ export default function VisualEditorPage() {
                       onChange={(e) => setTestEmail(e.target.value)}
                     />
                   </div>
-                  <Button onClick={handleSendTest} disabled={isSendingTest} className="w-full">
-                    {isSendingTest ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                  <Button
+                    onClick={handleSendTest}
+                    disabled={isSendingTest}
+                    className="w-full"
+                  >
+                    {isSendingTest ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : null}
                     Send Test Email
                   </Button>
                 </div>
@@ -153,10 +169,14 @@ export default function VisualEditorPage() {
             <DialogTitle>Email Preview</DialogTitle>
           </DialogHeader>
           <div className="mt-4">
-            <iframe srcDoc={previewHtml} className="w-full h-[600px] border rounded-lg" title="Email Preview" />
+            <iframe
+              srcDoc={previewHtml}
+              className="w-full h-[600px] border rounded-lg"
+              title="Email Preview"
+            />
           </div>
         </DialogContent>
       </Dialog>
     </motion.div>
-  )
+  );
 }

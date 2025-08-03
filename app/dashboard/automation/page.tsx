@@ -1,24 +1,36 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { motion } from "framer-motion"
-import { Plus, Play, Pause, BarChart3, Users, Mail, Clock } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { WorkflowBuilder } from "@/components/automation/workflow-builder"
-import { useAuth } from "@/lib/auth"
-import { useQuery, useMutation } from "convex/react"
-import { api } from "@/convex/_generated/api"
-import { toast } from "sonner"
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Plus, Play, Pause, BarChart3, Users, Mail, Clock } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { WorkflowBuilder } from "@/components/automation/workflow-builder";
+import { useAuth } from "@/app/providers/auth";
+import { useQuery, useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { toast } from "sonner";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
   transition: { duration: 0.5 },
-}
+};
 
 const staggerContainer = {
   animate: {
@@ -26,52 +38,65 @@ const staggerContainer = {
       staggerChildren: 0.1,
     },
   },
-}
+};
 
 export default function AutomationPage() {
-  const [isWorkflowDialogOpen, setIsWorkflowDialogOpen] = useState(false)
-  const { currentWorkspace, user } = useAuth()
+  const [isWorkflowDialogOpen, setIsWorkflowDialogOpen] = useState(false);
+  const { currentWorkspace, user } = useAuth();
 
   const workflows = useQuery(
     api.automation.getWorkflows,
-    currentWorkspace ? { workspaceId: currentWorkspace._id } : "skip",
-  )
+    currentWorkspace ? { workspaceId: currentWorkspace._id } : "skip"
+  );
 
-  const abTests = useQuery(api.automation.getAbTests, currentWorkspace ? { workspaceId: currentWorkspace._id } : "skip")
+  const abTests = useQuery(
+    api.automation.getAbTests,
+    currentWorkspace ? { workspaceId: currentWorkspace._id } : "skip"
+  );
 
-  const createWorkflow = useMutation(api.automation.createWorkflow)
+  const createWorkflow = useMutation(api.automation.createWorkflow);
 
   const handleCreateWorkflow = async (workflowData: any) => {
-    if (!currentWorkspace || !user) return
+    if (!currentWorkspace || !user) return;
 
     try {
       await createWorkflow({
         workspaceId: currentWorkspace._id,
         ...workflowData,
         createdBy: user._id,
-      })
-      toast.success("Workflow created successfully!")
-      setIsWorkflowDialogOpen(false)
+      });
+      toast.success("Workflow created successfully!");
+      setIsWorkflowDialogOpen(false);
     } catch (error) {
-      toast.error("Failed to create workflow")
+      toast.error("Failed to create workflow");
     }
-  }
+  };
 
   if (!currentWorkspace) {
-    return <div>Please select a workspace</div>
+    return <div>Please select a workspace</div>;
   }
 
   return (
-    <motion.div className="space-y-8" initial="initial" animate="animate" variants={staggerContainer}>
+    <motion.div
+      className="space-y-8"
+      initial="initial"
+      animate="animate"
+      variants={staggerContainer}
+    >
       {/* Header */}
       <motion.div variants={fadeInUp}>
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Automation</h1>
-            <p className="text-muted-foreground">Create automated email workflows and A/B tests</p>
+            <p className="text-muted-foreground">
+              Create automated email workflows and A/B tests
+            </p>
           </div>
           <div className="flex items-center space-x-2">
-            <Dialog open={isWorkflowDialogOpen} onOpenChange={setIsWorkflowDialogOpen}>
+            <Dialog
+              open={isWorkflowDialogOpen}
+              onOpenChange={setIsWorkflowDialogOpen}
+            >
               <DialogTrigger asChild>
                 <Button>
                   <Plus className="mr-2 h-4 w-4" />
@@ -90,9 +115,16 @@ export default function AutomationPage() {
       </motion.div>
 
       {/* Stats Cards */}
-      <motion.div className="grid gap-4 md:grid-cols-4" variants={staggerContainer}>
+      <motion.div
+        className="grid gap-4 md:grid-cols-4"
+        variants={staggerContainer}
+      >
         {[
-          { title: "Active Workflows", value: workflows?.filter((w) => w.isActive).length || 0, icon: Play },
+          {
+            title: "Active Workflows",
+            value: workflows?.filter((w) => w.isActive).length || 0,
+            icon: Play,
+          },
           { title: "Total Subscribers", value: "12,543", icon: Users },
           { title: "Emails Sent", value: "45,231", icon: Mail },
           { title: "Avg. Open Rate", value: "24.8%", icon: BarChart3 },
@@ -100,7 +132,9 @@ export default function AutomationPage() {
           <motion.div key={index} variants={fadeInUp}>
             <Card className="glassmorphism">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  {stat.title}
+                </CardTitle>
                 <stat.icon className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -128,12 +162,17 @@ export default function AutomationPage() {
                       <div>
                         <CardTitle className="flex items-center space-x-2">
                           <span>{workflow.name}</span>
-                          <Badge variant={workflow.isActive ? "default" : "secondary"}>
+                          <Badge
+                            variant={
+                              workflow.isActive ? "default" : "secondary"
+                            }
+                          >
                             {workflow.isActive ? "Active" : "Inactive"}
                           </Badge>
                         </CardTitle>
                         <CardDescription>
-                          {workflow.type} workflow • {workflow.steps.length} steps
+                          {workflow.type} workflow • {workflow.steps.length}{" "}
+                          steps
                         </CardDescription>
                       </div>
                       <div className="flex items-center space-x-2">
@@ -141,7 +180,10 @@ export default function AutomationPage() {
                           <BarChart3 className="mr-2 h-4 w-4" />
                           Analytics
                         </Button>
-                        <Button size="sm" variant={workflow.isActive ? "secondary" : "default"}>
+                        <Button
+                          size="sm"
+                          variant={workflow.isActive ? "secondary" : "default"}
+                        >
                           {workflow.isActive ? (
                             <>
                               <Pause className="mr-2 h-4 w-4" />
@@ -169,7 +211,10 @@ export default function AutomationPage() {
                       </div>
                       <div className="flex items-center space-x-1">
                         <Clock className="h-4 w-4" />
-                        <span>Created {new Date(workflow.createdAt).toLocaleDateString()}</span>
+                        <span>
+                          Created{" "}
+                          {new Date(workflow.createdAt).toLocaleDateString()}
+                        </span>
                       </div>
                     </div>
                   </CardContent>
@@ -186,10 +231,16 @@ export default function AutomationPage() {
                         <Play className="h-6 w-6 text-muted-foreground" />
                       </div>
                       <div>
-                        <h3 className="text-lg font-semibold">No workflows yet</h3>
-                        <p className="text-muted-foreground">Create your first automation workflow to get started</p>
+                        <h3 className="text-lg font-semibold">
+                          No workflows yet
+                        </h3>
+                        <p className="text-muted-foreground">
+                          Create your first automation workflow to get started
+                        </p>
                       </div>
-                      <Button onClick={() => setIsWorkflowDialogOpen(true)}>Create Workflow</Button>
+                      <Button onClick={() => setIsWorkflowDialogOpen(true)}>
+                        Create Workflow
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -207,9 +258,12 @@ export default function AutomationPage() {
                     <BarChart3 className="h-6 w-6 text-muted-foreground" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold">A/B Testing Coming Soon</h3>
+                    <h3 className="text-lg font-semibold">
+                      A/B Testing Coming Soon
+                    </h3>
                     <p className="text-muted-foreground">
-                      Test different versions of your emails to optimize performance
+                      Test different versions of your emails to optimize
+                      performance
                     </p>
                   </div>
                 </div>
@@ -227,8 +281,13 @@ export default function AutomationPage() {
                     <Users className="h-6 w-6 text-muted-foreground" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold">Advanced Segmentation</h3>
-                    <p className="text-muted-foreground">Create targeted segments based on behavior and demographics</p>
+                    <h3 className="text-lg font-semibold">
+                      Advanced Segmentation
+                    </h3>
+                    <p className="text-muted-foreground">
+                      Create targeted segments based on behavior and
+                      demographics
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -237,5 +296,5 @@ export default function AutomationPage() {
         </TabsContent>
       </Tabs>
     </motion.div>
-  )
+  );
 }

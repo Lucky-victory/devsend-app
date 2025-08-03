@@ -1,27 +1,30 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
-import { Play, Save, Eye, Settings, ArrowLeft, Loader2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Separator } from "@/components/ui/separator"
-import { Badge } from "@/components/ui/badge"
-import Link from "next/link"
-import { useAuth } from "@/lib/auth"
-import { useConvex } from "convex/react"
-import { api } from "@/convex/_generated/api"
-import { compileEmailTemplate, validateTemplateCode } from "@/lib/email-compiler"
-import { toast } from "sonner"
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Play, Save, Eye, Settings, ArrowLeft, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
+import { useAuth } from "@/app/providers/auth";
+import { useConvex } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import {
+  compileEmailTemplate,
+  validateTemplateCode,
+} from "@/lib/email-compiler";
+import { toast } from "sonner";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
   transition: { duration: 0.5 },
-}
+};
 
 const defaultTemplate = `import { Html, Head, Body, Container, Text, Button, Img } from '@react-email/components'
 
@@ -78,57 +81,59 @@ export default function WelcomeEmail({
       </Body>
     </Html>
   )
-}`
+}`;
 
 export default function CodeEditorPage() {
-  const [templateName, setTemplateName] = useState("Welcome Email")
-  const [templateCode, setTemplateCode] = useState(defaultTemplate)
-  const [previewData, setPreviewData] = useState('{"firstName": "John", "companyName": "DevSend"}')
-  const [compiledTemplate, setCompiledTemplate] = useState<any>(null)
-  const [isCompiling, setIsCompiling] = useState(false)
-  const [isSaving, setIsSaving] = useState(false)
-  const [validationErrors, setValidationErrors] = useState<string[]>([])
+  const [templateName, setTemplateName] = useState("Welcome Email");
+  const [templateCode, setTemplateCode] = useState(defaultTemplate);
+  const [previewData, setPreviewData] = useState(
+    '{"firstName": "John", "companyName": "DevSend"}'
+  );
+  const [compiledTemplate, setCompiledTemplate] = useState<any>(null);
+  const [isCompiling, setIsCompiling] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
-  const { currentWorkspace, user } = useAuth()
-  const convex = useConvex()
+  const { currentWorkspace, user } = useAuth();
+  const convex = useConvex();
 
   // Compile template when code or preview data changes
   useEffect(() => {
     const compileTemplate = async () => {
-      setIsCompiling(true)
+      setIsCompiling(true);
       try {
-        const validation = validateTemplateCode(templateCode)
-        setValidationErrors(validation.errors)
+        const validation = validateTemplateCode(templateCode);
+        setValidationErrors(validation.errors);
 
         if (validation.isValid) {
-          const parsedData = JSON.parse(previewData || "{}")
-          const compiled = await compileEmailTemplate(templateCode, parsedData)
-          setCompiledTemplate(compiled)
+          const parsedData = JSON.parse(previewData || "{}");
+          const compiled = await compileEmailTemplate(templateCode, parsedData);
+          setCompiledTemplate(compiled);
         }
       } catch (error) {
-        console.error("Compilation error:", error)
-        setValidationErrors(["Failed to compile template"])
+        console.error("Compilation error:", error);
+        setValidationErrors(["Failed to compile template"]);
       } finally {
-        setIsCompiling(false)
+        setIsCompiling(false);
       }
-    }
+    };
 
-    const debounceTimer = setTimeout(compileTemplate, 500)
-    return () => clearTimeout(debounceTimer)
-  }, [templateCode, previewData])
+    const debounceTimer = setTimeout(compileTemplate, 500);
+    return () => clearTimeout(debounceTimer);
+  }, [templateCode, previewData]);
 
   const handleSave = async () => {
     if (!currentWorkspace || !user) {
-      toast.error("Please log in to save templates")
-      return
+      toast.error("Please log in to save templates");
+      return;
     }
 
     if (validationErrors.length > 0) {
-      toast.error("Please fix validation errors before saving")
-      return
+      toast.error("Please fix validation errors before saving");
+      return;
     }
 
-    setIsSaving(true)
+    setIsSaving(true);
     try {
       await convex.mutation(api.templates.createTemplate, {
         workspaceId: currentWorkspace._id,
@@ -137,15 +142,15 @@ export default function CodeEditorPage() {
         content: templateCode,
         previewData,
         createdBy: user._id,
-      })
+      });
 
-      toast.success("Template saved successfully!")
+      toast.success("Template saved successfully!");
     } catch (error) {
-      toast.error("Failed to save template")
+      toast.error("Failed to save template");
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
-  }
+  };
 
   return (
     <motion.div
@@ -165,11 +170,21 @@ export default function CodeEditorPage() {
             </Button>
             <div>
               <h1 className="text-3xl font-bold tracking-tight">Code Editor</h1>
-              <p className="text-muted-foreground">Create email templates with React/TSX</p>
+              <p className="text-muted-foreground">
+                Create email templates with React/TSX
+              </p>
             </div>
           </div>
           <div className="flex items-center space-x-2">
-            <Badge variant={isCompiling ? "secondary" : validationErrors.length > 0 ? "destructive" : "default"}>
+            <Badge
+              variant={
+                isCompiling
+                  ? "secondary"
+                  : validationErrors.length > 0
+                    ? "destructive"
+                    : "default"
+              }
+            >
               {isCompiling ? (
                 <>
                   <Loader2 className="mr-1 h-3 w-3 animate-spin" />
@@ -188,8 +203,15 @@ export default function CodeEditorPage() {
               <Settings className="mr-2 h-4 w-4" />
               Settings
             </Button>
-            <Button onClick={handleSave} disabled={isSaving || validationErrors.length > 0}>
-              {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+            <Button
+              onClick={handleSave}
+              disabled={isSaving || validationErrors.length > 0}
+            >
+              {isSaving ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Save className="mr-2 h-4 w-4" />
+              )}
               Save Template
             </Button>
           </div>
@@ -301,5 +323,5 @@ export default function CodeEditorPage() {
         </motion.div>
       </div>
     </motion.div>
-  )
+  );
 }

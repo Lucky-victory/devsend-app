@@ -1,65 +1,71 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { motion } from "framer-motion"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { Mail, ArrowLeft, Loader2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Separator } from "@/components/ui/separator"
-import { Checkbox } from "@/components/ui/checkbox"
-import { useAuth } from "@/lib/auth"
-import { toast } from "sonner"
+import { useState } from "react";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Mail, ArrowLeft, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useAuth } from "@/app/providers/auth";
+import { toast } from "sonner";
 
 export default function SignupPage() {
-  const [firstName, setFirstName] = useState("")
-  const [lastName, setLastName] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [acceptTerms, setAcceptTerms] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const { signup } = useAuth()
-  const router = useRouter()
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [acceptTerms, setAcceptTerms] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { signup } = useAuth();
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (!acceptTerms) {
-      toast.error("Please accept the terms and conditions")
-      return
+      toast.error("Please accept the terms and conditions");
+      return;
     }
 
-    setIsLoading(true)
+    setIsLoading(true);
 
     try {
-      await signup(email, firstName, lastName, password)
-      toast.success("Account created successfully!")
-      router.push("/dashboard")
+      await signup(email, firstName, lastName, password);
+      toast.success("Account created successfully!");
+      router.push("/dashboard");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Signup failed")
+      toast.error(error instanceof Error ? error.message : "Signup failed");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleMagicLink = async () => {
     if (!email) {
-      toast.error("Please enter your email address")
-      return
+      toast.error("Please enter your email address");
+      return;
     }
 
-    setIsLoading(true)
+    setIsLoading(true);
     // Simulate magic link sending
     setTimeout(() => {
-      toast.success("Magic link sent to your email!")
-      setIsLoading(false)
-    }, 1000)
-  }
+      toast.success("Magic link sent to your email!");
+      setIsLoading(false);
+    }, 1000);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 flex items-center justify-center p-4">
@@ -70,7 +76,10 @@ export default function SignupPage() {
         className="w-full max-w-md"
       >
         <div className="mb-8">
-          <Link href="/" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground">
+          <Link
+            href="/"
+            className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground"
+          >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to home
           </Link>
@@ -84,7 +93,9 @@ export default function SignupPage() {
               </div>
             </div>
             <CardTitle className="text-2xl">Create your account</CardTitle>
-            <CardDescription>Start building amazing email campaigns today</CardDescription>
+            <CardDescription>
+              Start building amazing email campaigns today
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -141,7 +152,9 @@ export default function SignupPage() {
                 <Checkbox
                   id="terms"
                   checked={acceptTerms}
-                  onCheckedChange={(checked) => setAcceptTerms(checked as boolean)}
+                  onCheckedChange={(checked) =>
+                    setAcceptTerms(checked as boolean)
+                  }
                 />
                 <label
                   htmlFor="terms"
@@ -152,14 +165,24 @@ export default function SignupPage() {
                     Terms of Service
                   </Link>{" "}
                   and{" "}
-                  <Link href="/privacy" className="text-primary hover:underline">
+                  <Link
+                    href="/privacy"
+                    className="text-primary hover:underline"
+                  >
                     Privacy Policy
                   </Link>
                 </label>
               </div>
 
-              <Button className="w-full h-11" size="lg" type="submit" disabled={isLoading}>
-                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              <Button
+                className="w-full h-11"
+                size="lg"
+                type="submit"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : null}
                 Create Account
               </Button>
             </form>
@@ -169,7 +192,9 @@ export default function SignupPage() {
                 <Separator />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+                <span className="bg-background px-2 text-muted-foreground">
+                  Or continue with
+                </span>
               </div>
             </div>
 
@@ -194,5 +219,5 @@ export default function SignupPage() {
         </Card>
       </motion.div>
     </div>
-  )
+  );
 }
