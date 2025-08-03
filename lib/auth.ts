@@ -1,6 +1,6 @@
 import { convexAdapter } from "@convex-dev/better-auth";
 import { convex, crossDomain } from "@convex-dev/better-auth/plugins";
-import { genericOAuth, organization, twoFactor, g } from "better-auth/plugins";
+import { genericOAuth, organization, twoFactor } from "better-auth/plugins";
 import { emailOTP } from "better-auth/plugins";
 import {
   sendMagicLink,

@@ -1,13 +1,7 @@
 "use client";
-
-import type React from "react";
-
-import { createContext, useContext, useEffect, useState } from "react";
-import { useConvex } from "convex/react";
-import { api } from "@/convex/_generated/api";
-import type { Id } from "@/convex/_generated/dataModel";
 import { ConvexBetterAuthProvider } from "@convex-dev/better-auth/react";
 import { convex } from "@/lib/convex-client";
+import { authClient } from "@/lib/auth-client";
 
 // interface User {
 //   _id: Id<"users">
