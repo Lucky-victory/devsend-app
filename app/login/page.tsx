@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
+import { authClient } from "@/lib/auth-client";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -31,9 +32,19 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      // await login(email, password);
-      toast.success("Welcome back!");
-      router.push("/dashboard");
+      const { data, error } = await authClient.signIn.email({
+        email,
+        password,
+      });
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
+      if (data) {
+        toast.success("Welcome back!");
+        // router.push("/dashboard");
+      }
+      console.log({ data, error });
     } catch (error) {
       toast.error("Login failed");
     } finally {

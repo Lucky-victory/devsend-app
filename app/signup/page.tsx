@@ -49,8 +49,12 @@ export default function SignupPage() {
       const { data, error } = await authClient.signUp.email({
         email,
         name: `${firstName} ${lastName}`,
-
         password,
+        fetchOptions: {
+          next: {
+            revalidate: 0,
+          },
+        },
       });
       if (error) {
         toast.error(error.message);
