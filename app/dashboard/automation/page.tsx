@@ -24,7 +24,7 @@ import { WorkflowBuilder } from "@/components/automation/workflow-builder";
 import { useAuth } from "@/hooks/use-auth";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -43,7 +43,6 @@ const staggerContainer = {
 export default function AutomationPage() {
   const [isWorkflowDialogOpen, setIsWorkflowDialogOpen] = useState(false);
   const { currentWorkspace, user } = useAuth();
-  const { toast } = useToast();
   const workflows = useQuery(
     api.automation.getWorkflows,
     currentWorkspace ? { workspaceId: currentWorkspace._id } : "skip"
@@ -65,15 +64,10 @@ export default function AutomationPage() {
         ...workflowData,
         createdBy: user._id,
       });
-      toast({
-        title: "Workflow created successfully!",
-      });
+      toast.success("Workflow created successfully!");
       setIsWorkflowDialogOpen(false);
     } catch (error) {
-      toast({
-        title: "Failed to create workflow",
-        variant: "destructive",
-      });
+      toast.error("Failed to create workflow");
     }
   };
 

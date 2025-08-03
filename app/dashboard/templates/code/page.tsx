@@ -18,7 +18,7 @@ import {
   compileEmailTemplate,
   validateTemplateCode,
 } from "@/lib/email-compiler";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -93,7 +93,6 @@ export default function CodeEditorPage() {
   const [isCompiling, setIsCompiling] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
-  const { toast } = useToast();
   const { currentWorkspace, user } = useAuth();
   const convex = useConvex();
 
@@ -124,18 +123,12 @@ export default function CodeEditorPage() {
 
   const handleSave = async () => {
     if (!currentWorkspace || !user) {
-      toast({
-        title: "Please log in to save templates",
-        variant: "destructive",
-      });
+      toast.error("Please log in to save templates");
       return;
     }
 
     if (validationErrors.length > 0) {
-      toast({
-        title: "Please fix validation errors before saving",
-        variant: "destructive",
-      });
+      toast.error("Please fix validation errors before saving");
       return;
     }
 
@@ -150,14 +143,9 @@ export default function CodeEditorPage() {
         createdBy: user._id,
       });
 
-      toast({
-        title: "Template saved successfully!",
-      });
+      toast.success("Template saved successfully!");
     } catch (error) {
-      toast({
-        title: "Failed to save template",
-        variant: "destructive",
-      });
+      toast.error("Failed to save template");
     } finally {
       setIsSaving(false);
     }

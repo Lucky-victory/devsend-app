@@ -18,13 +18,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -33,16 +32,10 @@ export default function LoginPage() {
 
     try {
       // await login(email, password);
-      toast({
-        title: "Welcome back!",
-        description: "You are now logged in.",
-      });
+      toast.success("Welcome back!");
       router.push("/dashboard");
     } catch (error) {
-      toast({
-        title: "Login failed",
-        description: error instanceof Error ? error.message : "Login failed",
-      });
+      toast.error("Login failed");
     } finally {
       setIsLoading(false);
     }
@@ -50,18 +43,14 @@ export default function LoginPage() {
 
   const handleMagicLink = async () => {
     if (!email) {
-      toast({
-        title: "Please enter your email address",
-      });
+      toast.error("Please enter your email address");
       return;
     }
 
     setIsLoading(true);
     // Simulate magic link sending
     setTimeout(() => {
-      toast({
-        title: "Magic link sent to your email!",
-      });
+      toast.success("Magic link sent to your email!");
       setIsLoading(false);
     }, 1000);
   };

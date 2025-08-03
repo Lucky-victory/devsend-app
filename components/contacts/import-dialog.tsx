@@ -21,7 +21,7 @@ import {
 } from "@/lib/csv-processor";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 interface ImportDialogProps {
   open: boolean;
@@ -41,7 +41,6 @@ export function ImportDialog({
   const [isProcessing, setIsProcessing] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const [validContacts, setValidContacts] = useState<any[]>([]);
-  const { toast } = useToast();
   const importContacts = useMutation(api.contacts.importContacts);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,10 +57,7 @@ export function ImportDialog({
 
   const handleProcessCSV = async () => {
     if (!csvContent.trim()) {
-      toast({
-        title: "Please upload a CSV file or paste CSV content",
-        variant: "destructive",
-      });
+      toast.error("Please upload a CSV file or paste CSV content");
       return;
     }
 
@@ -94,10 +90,7 @@ export function ImportDialog({
 
       setValidContacts(validContactsData);
     } catch (error) {
-      toast({
-        title: "Failed to process CSV file",
-        variant: "destructive",
-      });
+      toast.error("Failed to process CSV file");
     } finally {
       setIsProcessing(false);
     }
@@ -122,9 +115,7 @@ export function ImportDialog({
         contacts: contactsToImport,
       });
 
-      toast({
-        title: `Successfully imported ${result.imported} contacts!`,
-      });
+      toast.success(`Successfully imported ${result.imported} contacts!`);
       onOpenChange(false);
 
       // Reset state
@@ -132,10 +123,7 @@ export function ImportDialog({
       setImportResult(null);
       setValidContacts([]);
     } catch (error) {
-      toast({
-        title: "Failed to import contacts",
-        variant: "destructive",
-      });
+      toast.error("Failed to import contacts");
     } finally {
       setIsImporting(false);
     }

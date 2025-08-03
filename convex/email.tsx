@@ -9,8 +9,10 @@ import { components } from "./_generated/api";
 import { Resend } from "@convex-dev/resend";
 import { type RunMutationCtx } from "@convex-dev/better-auth";
 
+const apiKey = process.env.RESEND_API_KEY;
 export const resend: Resend = new Resend(components.resend, {
   testMode: false,
+  apiKey,
 });
 
 export const sendEmailVerification = async (
@@ -24,7 +26,7 @@ export const sendEmailVerification = async (
   }
 ) => {
   await resend.sendEmail(ctx, {
-    from: "Test <onboarding@boboddy.business>",
+    from: "DevSend <victory@notif.klozbuy.com>",
     to,
     subject: "Verify your email address",
     html: await render(<VerifyEmail url={url} />),
@@ -42,7 +44,7 @@ export const sendOTPVerification = async (
   }
 ) => {
   await resend.sendEmail(ctx, {
-    from: "Test <onboarding@boboddy.business>",
+    from: "DevSend <victory@notif.klozbuy.com>",
     to,
     subject: "Verify your email address",
     html: await render(<VerifyOTP code={code} />),
@@ -60,7 +62,7 @@ export const sendMagicLink = async (
   }
 ) => {
   await resend.sendEmail(ctx, {
-    from: "Test <onboarding@boboddy.business>",
+    from: "DevSend <victory@notif.klozbuy.com>",
     to,
     subject: "Sign in to your account",
     html: await render(<MagicLinkEmail url={url} />),
@@ -78,7 +80,7 @@ export const sendResetPassword = async (
   }
 ) => {
   await resend.sendEmail(ctx, {
-    from: "Test <onboarding@boboddy.business>",
+    from: "DevSend <victory@notif.klozbuy.com>",
     to,
     subject: "Reset your password",
     html: await render(<ResetPasswordEmail url={url} />),

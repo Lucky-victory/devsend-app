@@ -25,10 +25,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
-import { useAuth } from "@/app/providers/auth";
+import { useAuth } from "@/hooks/use-auth";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -48,7 +48,6 @@ export default function TemplatesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
   const { currentWorkspace } = useAuth();
-  const { toast } = useToast();
   const templates = useQuery(
     api.templates.getTemplates,
     currentWorkspace ? { workspaceId: currentWorkspace._id } : "skip"
@@ -59,14 +58,9 @@ export default function TemplatesPage() {
   const handleDeleteTemplate = async (templateId: string) => {
     try {
       await deleteTemplate({ templateId: templateId as any });
-      toast({
-        title: "Template deleted successfully",
-      });
+      toast.success("Template deleted successfully");
     } catch (error) {
-      toast({
-        title: "Failed to delete template",
-        variant: "destructive",
-      });
+      toast.error("Failed to delete template");
     }
   };
 

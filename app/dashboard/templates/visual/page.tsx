@@ -18,7 +18,7 @@ import { VisualEditor } from "@/components/email-builder/visual-editor";
 import { useAuth } from "@/hooks/use-auth";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -34,16 +34,12 @@ export default function VisualEditorPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [testEmail, setTestEmail] = useState("");
   const [isSendingTest, setIsSendingTest] = useState(false);
-  const { toast } = useToast();
   const { currentWorkspace, user } = useAuth();
   const createTemplate = useMutation(api.templates.createTemplate);
 
   const handleSave = async (design: any) => {
     if (!currentWorkspace || !user) {
-      toast({
-        title: "Please log in to save templates",
-        variant: "destructive",
-      });
+      toast.error("Please log in to save templates");
       return;
     }
 
@@ -58,14 +54,9 @@ export default function VisualEditorPage() {
       });
 
       setTemplateDesign(design);
-      toast({
-        title: "Template saved successfully!",
-      });
+      toast.success("Template saved successfully!");
     } catch (error) {
-      toast({
-        title: "Failed to save template",
-        variant: "destructive",
-      });
+      toast.error("Failed to save template");
     } finally {
       setIsSaving(false);
     }
@@ -78,10 +69,7 @@ export default function VisualEditorPage() {
 
   const handleSendTest = async () => {
     if (!testEmail || !previewHtml) {
-      toast({
-        title: "Please enter a test email and generate preview first",
-        variant: "destructive",
-      });
+      toast.error("Please enter a test email and generate preview first");
       return;
     }
 
@@ -89,14 +77,9 @@ export default function VisualEditorPage() {
     try {
       // In a real app, you'd call your email sending API
       await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate API call
-      toast({
-        title: `Test email sent to ${testEmail}!`,
-      });
+      toast.success(`Test email sent to ${testEmail}!`);
     } catch (error) {
-      toast({
-        title: "Failed to send test email",
-        variant: "destructive",
-      });
+      toast.error("Failed to send test email");
     } finally {
       setIsSendingTest(false);
     }

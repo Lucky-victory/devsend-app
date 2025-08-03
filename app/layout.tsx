@@ -3,9 +3,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/app/providers/theme-provider";
-import { ConvexProvider } from "@/app/providers/convex-provider";
-import { AuthProvider } from "@/app/providers/auth";
-import { Toaster } from "@/components/ui/toaster";
+import { ConvexClientProvider } from "@/app/providers/auth";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,16 +22,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <ConvexProvider>
+        <ConvexClientProvider>
           <ThemeProvider
             attribute="class"
             defaultTheme="light"
             enableSystem
             disableTransitionOnChange
           >
-            <AuthProvider>{children}</AuthProvider>
+            {children}
           </ThemeProvider>
-        </ConvexProvider>
+        </ConvexClientProvider>
         <Toaster />
       </body>
     </html>

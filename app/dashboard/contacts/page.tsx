@@ -53,7 +53,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { exportContactsToCSV } from "@/lib/csv-processor";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -80,7 +80,6 @@ export default function ContactsPage() {
     lastName: "",
     tags: "",
   });
-  const { toast } = useToast();
   const { currentWorkspace, user } = useAuth();
 
   const contacts = useQuery(
@@ -110,18 +109,11 @@ export default function ContactsPage() {
           : undefined,
       });
 
-      toast({
-        title: "Contact added successfully!",
-      });
+      toast.success("Contact added successfully!");
       setIsAddDialogOpen(false);
       setNewContact({ email: "", firstName: "", lastName: "", tags: "" });
     } catch (error) {
-      toast({
-        title: "Failed to add contact",
-        description:
-          error instanceof Error ? error.message : "Failed to add contact",
-        variant: "destructive",
-      });
+      toast.error("Failed to add contact");
     }
   };
 
@@ -136,24 +128,15 @@ export default function ContactsPage() {
     a.download = `contacts-${new Date().toISOString().split("T")[0]}.csv`;
     a.click();
     URL.revokeObjectURL(url);
-    toast({
-      title: "Contacts exported successfully!",
-    });
+    toast.success("Contacts exported successfully!");
   };
 
   const handleDeleteContact = async (contactId: string) => {
     try {
       await deleteContact({ contactId: contactId as any });
-      toast({
-        title: "Contact deleted successfully",
-      });
+      toast.success("Contact deleted successfully");
     } catch (error) {
-      toast({
-        title: "Failed to delete contact",
-        description:
-          error instanceof Error ? error.message : "Failed to delete contact",
-        variant: "destructive",
-      });
+      toast.error("Failed to delete contact");
     }
   };
 

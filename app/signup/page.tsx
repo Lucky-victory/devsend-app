@@ -6,7 +6,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Mail, ArrowLeft, Loader2 } from "lucide-react";
+import { Mail, ArrowLeft, Loader2, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import { useConvexAuth, useMutation } from "convex/react";
 import { authClient } from "@/lib/auth-client";
 
@@ -30,34 +30,39 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const { isAuthenticated, isLoading: isConvexLoading } = useConvexAuth();
   console.log({ isAuthenticated, isLoading });
 
-  const signup = authClient.signUp.email;
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!acceptTerms) {
-      toast({
-        title: "Please accept the terms and conditions",
-      });
+      toast.error("Please accept the terms and conditions");
       return;
     }
 
     setIsLoading(true);
 
     try {
-      await signup({ email, name: `${firstName} ${lastName}`, password });
-      toast({
-        title: "Account created successfully!",
+      const { data, error } = await authClient.signUp.email({
+        email,
+        name: `${firstName} ${lastName}`,
+
+        password,
       });
-      router.push("/dashboard");
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
+      if (data) {
+        toast.success("Account created successfully!");
+        router.push("/dashboard");
+      }
+      console.log({ data, error });
     } catch (error) {
-      toast({
-        title: error instanceof Error ? error.message : "Signup failed",
-      });
+      toast.error(error instanceof Error ? error.message : "Signup failed");
     } finally {
       setIsLoading(false);
     }
@@ -65,18 +70,14 @@ export default function SignupPage() {
 
   const handleMagicLink = async () => {
     if (!email) {
-      toast({
-        title: "Please enter your email address",
-      });
+      toast.error("Please enter your email address");
       return;
     }
 
     setIsLoading(true);
     // Simulate magic link sending
     setTimeout(() => {
-      toast({
-        title: "Magic link sent to your email!",
-      });
+      toast.success("Magic link sent to your email!");
       setIsLoading(false);
     }, 1000);
   };
@@ -149,17 +150,35 @@ export default function SignupPage() {
                   required
                 />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-2 relative mb-4">
                 <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   placeholder="Create a strong password"
                   className="h-11"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
+                <p className="text-sm text-muted-foreground">
+                  Password must be at least 8 characters long
+                </p>
+                <Button
+                  variant={"ghost"}
+                  size={"icon"}
+                  className="absolute right-2 top-1/2 -translate-y-1/2"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <Eye className="h-4 w-4" />
+                  ) : (
+                    <EyeOff className="h-4 w-4" />
+                  )}
+                  <span className="sr-only">
+                    {showPassword ? "Hide Password" : "Show Password"}
+                  </span>
+                </Button>
               </div>
 
               <div className="flex items-center space-x-2">
