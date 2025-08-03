@@ -41,10 +41,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useAuth } from "@/app/providers/auth";
+import { useAuth } from "@/hooks/use-auth";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { toast } from "sonner";
+import { useToast } from "@/components/ui/use-toast";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -73,7 +73,7 @@ export default function CampaignsPage() {
   });
 
   const { currentWorkspace, user } = useAuth();
-
+  const { toast } = useToast();
   const campaigns = useQuery(
     api.campaigns.getCampaigns,
     currentWorkspace ? { workspaceId: currentWorkspace._id } : "skip"
@@ -104,7 +104,9 @@ export default function CampaignsPage() {
         createdBy: user._id,
       });
 
-      toast.success("Campaign created successfully!");
+      toast({
+        title: "Campaign created successfully!",
+      });
       setIsCreateDialogOpen(false);
       setNewCampaign({
         name: "",
@@ -114,16 +116,24 @@ export default function CampaignsPage() {
         schedule: "now",
       });
     } catch (error) {
-      toast.error("Failed to create campaign");
+      toast({
+        title: "Failed to create campaign",
+        variant: "destructive",
+      });
     }
   };
 
   const handleSendCampaign = async (campaignId: string) => {
     try {
       await sendCampaign({ campaignId: campaignId as any });
-      toast.success("Campaign is being sent!");
+      toast({
+        title: "Campaign is being sent!",
+      });
     } catch (error) {
-      toast.error("Failed to send campaign");
+      toast({
+        title: "Failed to send campaign",
+        variant: "destructive",
+      });
     }
   };
 

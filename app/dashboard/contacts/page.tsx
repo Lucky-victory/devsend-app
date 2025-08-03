@@ -49,11 +49,11 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { ImportDialog } from "@/components/contacts/import-dialog";
-import { useAuth } from "@/app/providers/auth";
+import { useAuth } from "@/hooks/use-auth";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { exportContactsToCSV } from "@/lib/csv-processor";
-import { toast } from "sonner";
+import { useToast } from "@/components/ui/use-toast";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -80,7 +80,7 @@ export default function ContactsPage() {
     lastName: "",
     tags: "",
   });
-
+  const { toast } = useToast();
   const { currentWorkspace, user } = useAuth();
 
   const contacts = useQuery(
@@ -110,11 +110,18 @@ export default function ContactsPage() {
           : undefined,
       });
 
-      toast.success("Contact added successfully!");
+      toast({
+        title: "Contact added successfully!",
+      });
       setIsAddDialogOpen(false);
       setNewContact({ email: "", firstName: "", lastName: "", tags: "" });
     } catch (error) {
-      toast.error("Failed to add contact");
+      toast({
+        title: "Failed to add contact",
+        description:
+          error instanceof Error ? error.message : "Failed to add contact",
+        variant: "destructive",
+      });
     }
   };
 
@@ -129,15 +136,24 @@ export default function ContactsPage() {
     a.download = `contacts-${new Date().toISOString().split("T")[0]}.csv`;
     a.click();
     URL.revokeObjectURL(url);
-    toast.success("Contacts exported successfully!");
+    toast({
+      title: "Contacts exported successfully!",
+    });
   };
 
   const handleDeleteContact = async (contactId: string) => {
     try {
       await deleteContact({ contactId: contactId as any });
-      toast.success("Contact deleted successfully");
+      toast({
+        title: "Contact deleted successfully",
+      });
     } catch (error) {
-      toast.error("Failed to delete contact");
+      toast({
+        title: "Failed to delete contact",
+        description:
+          error instanceof Error ? error.message : "Failed to delete contact",
+        variant: "destructive",
+      });
     }
   };
 

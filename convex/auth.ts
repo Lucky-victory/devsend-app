@@ -30,14 +30,35 @@ export const {
     // We'll use onUpdateUser to keep it synced.
     const userId = await ctx.db.insert("users", {
       email: user.email,
+      name: user.name,
       firstName: user.name?.split(" ")[0] || "",
       lastName: user.name?.split(" ")[1] || "",
+
       emailVerified: false,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     });
+    // Create default workspace
+    const workspaceId = await ctx.db.insert("workspaces", {
+      name: `${user.name}'s Workspace`,
+      slug: `${user.name.toLowerCase()}-workspace-${Date.now()}`,
+      ownerId: userId,
+      fromName: `${user.name}`,
+      fromEmail: user.email,
+      replyToEmail: user.email,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    });
 
-    // This function must return the user id.
+    // Add user as owner of workspace
+    await ctx.db.insert("workspaceMembers", {
+      workspaceId,
+      userId,
+      role: "owner",
+      invitedAt: Date.now(),
+      joinedAt: Date.now(),
+    });
+
     return userId;
   },
   onDeleteUser: async (ctx, userId) => {
@@ -128,6 +149,19 @@ export const getUserByEmail = query({
       .query("users")
       .withIndex("by_email", (q) => q.eq("email", args.email))
       .first();
+  },
+});
+export const getCurrentWorkspace = query({
+  args: { userId: v.id("users") },
+  handler: async (ctx, args) => {
+    const memberships = await ctx.db
+      .query("workspaceMembers")
+      .withIndex("by_user", (q) => q.eq("userId", args.userId))
+      .first();
+    const workspace = await ctx.db.get(
+      memberships?.workspaceId as Id<"workspaces">
+    );
+    return workspace;
   },
 });
 

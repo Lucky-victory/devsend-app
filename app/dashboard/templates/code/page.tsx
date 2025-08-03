@@ -11,14 +11,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import { useAuth } from "@/app/providers/auth";
+import { useAuth } from "@/hooks/use-auth";
 import { useConvex } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import {
   compileEmailTemplate,
   validateTemplateCode,
 } from "@/lib/email-compiler";
-import { toast } from "sonner";
+import { useToast } from "@/components/ui/use-toast";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -93,7 +93,7 @@ export default function CodeEditorPage() {
   const [isCompiling, setIsCompiling] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
-
+  const { toast } = useToast();
   const { currentWorkspace, user } = useAuth();
   const convex = useConvex();
 
@@ -124,12 +124,18 @@ export default function CodeEditorPage() {
 
   const handleSave = async () => {
     if (!currentWorkspace || !user) {
-      toast.error("Please log in to save templates");
+      toast({
+        title: "Please log in to save templates",
+        variant: "destructive",
+      });
       return;
     }
 
     if (validationErrors.length > 0) {
-      toast.error("Please fix validation errors before saving");
+      toast({
+        title: "Please fix validation errors before saving",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -144,9 +150,14 @@ export default function CodeEditorPage() {
         createdBy: user._id,
       });
 
-      toast.success("Template saved successfully!");
+      toast({
+        title: "Template saved successfully!",
+      });
     } catch (error) {
-      toast.error("Failed to save template");
+      toast({
+        title: "Failed to save template",
+        variant: "destructive",
+      });
     } finally {
       setIsSaving(false);
     }

@@ -5,6 +5,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/app/providers/theme-provider";
 import { ConvexProvider } from "@/app/providers/convex-provider";
 import { AuthProvider } from "@/app/providers/auth";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,6 +33,7 @@ export default function RootLayout({
             <AuthProvider>{children}</AuthProvider>
           </ThemeProvider>
         </ConvexProvider>
+        <Toaster />
       </body>
     </html>
   );

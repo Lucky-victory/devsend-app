@@ -15,10 +15,10 @@ import {
 } from "@/components/ui/dialog";
 import Link from "next/link";
 import { VisualEditor } from "@/components/email-builder/visual-editor";
-import { useAuth } from "@/app/providers/auth";
+import { useAuth } from "@/hooks/use-auth";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { toast } from "sonner";
+import { useToast } from "@/components/ui/use-toast";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -34,13 +34,16 @@ export default function VisualEditorPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [testEmail, setTestEmail] = useState("");
   const [isSendingTest, setIsSendingTest] = useState(false);
-
+  const { toast } = useToast();
   const { currentWorkspace, user } = useAuth();
   const createTemplate = useMutation(api.templates.createTemplate);
 
   const handleSave = async (design: any) => {
     if (!currentWorkspace || !user) {
-      toast.error("Please log in to save templates");
+      toast({
+        title: "Please log in to save templates",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -55,9 +58,14 @@ export default function VisualEditorPage() {
       });
 
       setTemplateDesign(design);
-      toast.success("Template saved successfully!");
+      toast({
+        title: "Template saved successfully!",
+      });
     } catch (error) {
-      toast.error("Failed to save template");
+      toast({
+        title: "Failed to save template",
+        variant: "destructive",
+      });
     } finally {
       setIsSaving(false);
     }
@@ -70,7 +78,10 @@ export default function VisualEditorPage() {
 
   const handleSendTest = async () => {
     if (!testEmail || !previewHtml) {
-      toast.error("Please enter a test email and generate preview first");
+      toast({
+        title: "Please enter a test email and generate preview first",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -78,9 +89,14 @@ export default function VisualEditorPage() {
     try {
       // In a real app, you'd call your email sending API
       await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate API call
-      toast.success(`Test email sent to ${testEmail}!`);
+      toast({
+        title: `Test email sent to ${testEmail}!`,
+      });
     } catch (error) {
-      toast.error("Failed to send test email");
+      toast({
+        title: "Failed to send test email",
+        variant: "destructive",
+      });
     } finally {
       setIsSendingTest(false);
     }

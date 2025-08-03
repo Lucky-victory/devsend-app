@@ -28,7 +28,7 @@ import Link from "next/link";
 import { useAuth } from "@/app/providers/auth";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { toast } from "sonner";
+import { useToast } from "@/components/ui/use-toast";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -48,7 +48,7 @@ export default function TemplatesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
   const { currentWorkspace } = useAuth();
-
+  const { toast } = useToast();
   const templates = useQuery(
     api.templates.getTemplates,
     currentWorkspace ? { workspaceId: currentWorkspace._id } : "skip"
@@ -59,9 +59,14 @@ export default function TemplatesPage() {
   const handleDeleteTemplate = async (templateId: string) => {
     try {
       await deleteTemplate({ templateId: templateId as any });
-      toast.success("Template deleted successfully");
+      toast({
+        title: "Template deleted successfully",
+      });
     } catch (error) {
-      toast.error("Failed to delete template");
+      toast({
+        title: "Failed to delete template",
+        variant: "destructive",
+      });
     }
   };
 
