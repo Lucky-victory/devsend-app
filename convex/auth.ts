@@ -1,30 +1,56 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
-import { BetterAuth, type AuthFunctions } from "@convex-dev/better-auth";
+import {
+  type AuthFunctions,
+  BetterAuth,
+  PublicAuthFunctions,
+} from "@convex-dev/better-auth";
 import { api, components, internal } from "./_generated/api";
-import type { Id, DataModel } from "./_generated/dataModel";
+import { DataModel, Id } from "./_generated/dataModel";
+import { asyncMap } from "convex-helpers";
 
-// Typesafe way to pass Convex functions defined in this file
 const authFunctions: AuthFunctions = internal.auth;
+const publicAuthFunctions: PublicAuthFunctions = api.auth;
 
-// Initialize the component
 export const betterAuthComponent = new BetterAuth(components.betterAuth, {
   authFunctions,
+  publicAuthFunctions,
+  verbose: false,
 });
 
-// These are required named exports
-export const { createUser, updateUser, deleteUser, createSession } =
-  betterAuthComponent.createAuthFunctions<DataModel>({
-    // Must create a user and return the user id
-    onCreateUser: async (ctx, user) => {
-      return ctx.db.insert("users", {});
-    },
+export const {
+  createUser,
+  deleteUser,
+  updateUser,
+  createSession,
+  isAuthenticated,
+} = betterAuthComponent.createAuthFunctions<DataModel>({
+  onCreateUser: async (ctx, user) => {
+    // Example: copy the user's email to the application users table.
+    // We'll use onUpdateUser to keep it synced.
+    const userId = await ctx.db.insert("users", {
+      email: user.email,
+      firstName: user.name?.split(" ")[0] || "",
+      lastName: user.name?.split(" ")[1] || "",
+      emailVerified: false,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    });
 
-    // Delete the user when they are deleted from Better Auth
-    onDeleteUser: async (ctx, userId) => {
-      await ctx.db.delete(userId as Id<"users">);
-    },
-  });
+    // This function must return the user id.
+    return userId;
+  },
+  onDeleteUser: async (ctx, userId) => {
+    // Delete the user's data if the user is being deleted
+  },
+  onUpdateUser: async (ctx, user) => {
+    // Keep the user's email synced
+    const userId = user.userId as Id<"users">;
+    await ctx.db.patch(userId, {
+      email: user.email,
+    });
+  },
+});
 
 // Example function for getting the current user
 // Feel free to edit, omit, etc.
@@ -36,8 +62,8 @@ export const getCurrentUser = query({
     if (!userMetadata) {
       return null;
     }
-    // Get user data from your application's database
-    // (skip this if you have no fields in your users table schema)
+    // Get user data from your application's database (skip this if you have no
+    // fields in your users table schema)
     const user = await ctx.db.get(userMetadata.userId as Id<"users">);
     return {
       ...user,
@@ -45,55 +71,55 @@ export const getCurrentUser = query({
     };
   },
 });
-export const createUser = mutation({
-  args: {
-    email: v.string(),
-    firstName: v.string(),
-    lastName: v.string(),
-  },
-  handler: async (ctx, args) => {
-    const existingUser = await ctx.db
-      .query("users")
-      .withIndex("by_email", (q) => q.eq("email", args.email))
-      .first();
+// export const createUser = mutation({
+//   args: {
+//     email: v.string(),
+//     firstName: v.string(),
+//     lastName: v.string(),
+//   },
+//   handler: async (ctx, args) => {
+//     const existingUser = await ctx.db
+//       .query("users")
+//       .withIndex("by_email", (q) => q.eq("email", args.email))
+//       .first();
 
-    if (existingUser) {
-      throw new Error("User already exists");
-    }
+//     if (existingUser) {
+//       throw new Error("User already exists");
+//     }
 
-    const userId = await ctx.db.insert("users", {
-      email: args.email,
-      firstName: args.firstName,
-      lastName: args.lastName,
-      emailVerified: false,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-    });
+//     const userId = await ctx.db.insert("users", {
+//       email: args.email,
+//       firstName: args.firstName,
+//       lastName: args.lastName,
+//       emailVerified: false,
+//       createdAt: Date.now(),
+//       updatedAt: Date.now(),
+//     });
 
-    // Create default workspace
-    const workspaceId = await ctx.db.insert("workspaces", {
-      name: `${args.firstName}'s Workspace`,
-      slug: `${args.firstName.toLowerCase()}-workspace-${Date.now()}`,
-      ownerId: userId,
-      fromName: `${args.firstName} ${args.lastName}`,
-      fromEmail: args.email,
-      replyToEmail: args.email,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-    });
+//     // Create default workspace
+//     const workspaceId = await ctx.db.insert("workspaces", {
+//       name: `${args.firstName}'s Workspace`,
+//       slug: `${args.firstName.toLowerCase()}-workspace-${Date.now()}`,
+//       ownerId: userId,
+//       fromName: `${args.firstName} ${args.lastName}`,
+//       fromEmail: args.email,
+//       replyToEmail: args.email,
+//       createdAt: Date.now(),
+//       updatedAt: Date.now(),
+//     });
 
-    // Add user as owner of workspace
-    await ctx.db.insert("workspaceMembers", {
-      workspaceId,
-      userId,
-      role: "owner",
-      invitedAt: Date.now(),
-      joinedAt: Date.now(),
-    });
+//     // Add user as owner of workspace
+//     await ctx.db.insert("workspaceMembers", {
+//       workspaceId,
+//       userId,
+//       role: "owner",
+//       invitedAt: Date.now(),
+//       joinedAt: Date.now(),
+//     });
 
-    return { userId, workspaceId };
-  },
-});
+//     return { userId, workspaceId };
+//   },
+// });
 
 export const getUserByEmail = query({
   args: { email: v.string() },
