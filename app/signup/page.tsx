@@ -20,6 +20,8 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/components/ui/use-toast";
+import { useConvexAuth, useMutation } from "convex/react";
+import { authClient } from "@/lib/auth-client";
 
 export default function SignupPage() {
   const [firstName, setFirstName] = useState("");
@@ -30,7 +32,10 @@ export default function SignupPage() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
+  const { isAuthenticated, isLoading: isConvexLoading } = useConvexAuth();
+  console.log({ isAuthenticated, isLoading });
 
+  const signup = authClient.signUp.email;
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -44,7 +49,7 @@ export default function SignupPage() {
     setIsLoading(true);
 
     try {
-      // await signup(email, firstName, lastName, password);
+      await signup({ email, name: `${firstName} ${lastName}`, password });
       toast({
         title: "Account created successfully!",
       });
