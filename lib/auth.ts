@@ -31,16 +31,17 @@ const createOptions = (ctx: GenericCtx) =>
       },
     },
     emailVerification: {
-      sendVerificationEmail: async ({ user, url }) => {
+      sendVerificationEmail: async ({ user, url, token }) => {
         await sendEmailVerification(requireMutationCtx(ctx), {
           to: user.email,
           url,
+          token,
         });
       },
     },
     emailAndPassword: {
       enabled: true,
-      requireEmailVerification: true,
+      requireEmailVerification: false,
       sendResetPassword: async ({ user, url }) => {
         await sendResetPassword(requireMutationCtx(ctx), {
           to: user.email,
@@ -67,10 +68,11 @@ const createOptions = (ctx: GenericCtx) =>
     },
     plugins: [
       magicLink({
-        sendMagicLink: async ({ email, url }) => {
+        sendMagicLink: async ({ email, url, token }) => {
           await sendMagicLink(requireMutationCtx(ctx), {
             to: email,
             url,
+            token,
           });
         },
       }),

@@ -20,16 +20,18 @@ export const sendEmailVerification = async (
   {
     to,
     url,
+    token,
   }: {
     to: string;
     url: string;
+    token: string;
   }
 ) => {
   await resend.sendEmail(ctx, {
     from: "DevSend <victory@notif.klozbuy.com>",
     to,
     subject: "Verify your email address",
-    html: await render(<VerifyEmail url={url} />),
+    html: await render(<VerifyEmail url={`${url}?token=${token}`} />),
   });
 };
 
@@ -56,16 +58,18 @@ export const sendMagicLink = async (
   {
     to,
     url,
+    token,
   }: {
     to: string;
     url: string;
+    token: string;
   }
 ) => {
   await resend.sendEmail(ctx, {
     from: "DevSend <victory@notif.klozbuy.com>",
     to,
     subject: "Sign in to your account",
-    html: await render(<MagicLinkEmail url={url} />),
+    html: await render(<MagicLinkEmail url={`${url}?token=${token}`} />),
   });
 };
 
