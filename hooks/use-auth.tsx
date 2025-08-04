@@ -22,6 +22,6 @@ export const useAuth = () => {
     isAuthenticated,
     isLoading,
     user,
-    currentWorkspace,
+    currentWorkspace: currentWorkspace || {},
   };
 };
