@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   title: "DevSend - Developer-Centric Email Campaigns",
   description:
     "Intelligent and lightweight email campaign platform for developers, indie hackers, and small teams.",
+    generator: 'v0.dev'
 };
 
 export default function RootLayout({

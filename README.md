@@ -79,4 +79,3 @@ It’s:
 ---
 
 > 📨 Whether you send one email or a thousand, DevSend helps you do it with clarity, control, and speed.
-
