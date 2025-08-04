@@ -41,42 +41,46 @@ export default function LandingPage() {
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
-        <div className="container flex h-16 items-center justify-between">
-          <div className="flex items-center space-x-2">
+        <div className="container mx-auto flex h-16 items-center justify-between">
+          <div className="flex items-center flex-1 space-x-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
               <Mail className="h-4 w-4 text-primary-foreground" />
             </div>
             <span className="text-xl font-bold">DevSend</span>
           </div>
-          <nav className="hidden md:flex items-center space-x-6">
-            <Link
-              href="#features"
-              className="text-sm font-medium hover:text-primary transition-colors"
-            >
-              Features
-            </Link>
-            <Link
-              href="#pricing"
-              className="text-sm font-medium hover:text-primary transition-colors"
-            >
-              Pricing
-            </Link>
-            <Link
-              href="/sign-in"
-              className="text-sm font-medium hover:text-primary transition-colors"
-            >
-              Login
-            </Link>
-            <ThemeToggle />
-            <Button asChild>
-              <Link href="/sign-up">Get Started</Link>
-            </Button>
+          <nav className="hidden flex-grow  md:flex justify-between items-center ">
+            <div className="flex items-center gap-6">
+              <Link
+                href="#features"
+                className="text-sm font-medium hover:text-primary transition-colors"
+              >
+                Features
+              </Link>
+              <Link
+                href="#pricing"
+                className="text-sm font-medium hover:text-primary transition-colors"
+              >
+                Pricing
+              </Link>
+            </div>
+            <div className="flex items-center gap-6">
+              <Link
+                href="/sign-in"
+                className="text-sm font-medium hover:text-primary transition-colors"
+              >
+                Login
+              </Link>
+              <Button asChild>
+                <Link href="/sign-up">Get Started</Link>
+              </Button>
+              <ThemeToggle />
+            </div>
           </nav>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="container px-4 py-24 md:py-32">
+      <section className="container mx-auto px-4 py-24 md:py-32">
         <motion.div
           className="mx-auto max-w-4xl text-center"
           initial="initial"
@@ -128,7 +132,7 @@ export default function LandingPage() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="container px-4 py-24">
+      <section id="features" className="container mx-auto px-4 py-24">
         <motion.div
           className="mx-auto max-w-6xl"
           initial="initial"
@@ -205,7 +209,7 @@ export default function LandingPage() {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="container px-4 py-24">
+      <section id="pricing" className="container mx-auto px-4 py-24">
         <motion.div
           className="mx-auto max-w-4xl"
           initial="initial"
@@ -300,7 +304,7 @@ export default function LandingPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="container px-4 py-24">
+      <section className="container mx-auto px-4 py-24">
         <motion.div
           className="mx-auto max-w-4xl text-center"
           initial="initial"
@@ -332,7 +336,7 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="border-t bg-background/50 backdrop-blur-md">
-        <div className="container px-4 py-12">
+        <div className="container mx-auto px-4 py-12">
           <div className="grid gap-8 md:grid-cols-4">
             <div>
               <div className="flex items-center space-x-2 mb-4">

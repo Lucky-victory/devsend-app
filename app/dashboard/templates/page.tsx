@@ -50,7 +50,7 @@ export default function TemplatesPage() {
   const { currentWorkspace } = useAuth();
   const templates = useQuery(
     api.templates.getTemplates,
-    currentWorkspace ? { workspaceId: currentWorkspace._id } : "skip"
+    currentWorkspace ? { workspaceId: currentWorkspace?._id } : "skip"
   );
 
   const deleteTemplate = useMutation(api.templates.deleteTemplate);
