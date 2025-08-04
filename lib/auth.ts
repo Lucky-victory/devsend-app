@@ -104,9 +104,9 @@ export const createAuth = (ctx: GenericCtx) => {
     ...options,
     plugins: [
       ...options.plugins,
-      //   crossDomain({
-      //     siteUrl,
-      //   }),
+      crossDomain({
+        siteUrl,
+      }),
       // Pass in options so plugin schema inference flows through. Only required
       // for plugins that customize the user or session schema.
       // See "Some caveats":
