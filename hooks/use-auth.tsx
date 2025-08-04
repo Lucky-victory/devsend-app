@@ -9,9 +9,12 @@ export const useAuth = () => {
     isAuthenticated,
     isLoading,
   });
+  let currentWorkspace: any = {};
+  if (user) {
+    currentWorkspace = useQuery(api.auth.getCurrentWorkspace, {
+      userId: user._id,
+    });
+  }
 
-  const currentWorkspace = useQuery(api.auth.getCurrentWorkspace, {
-    userId: user?._id,
-  });
   return { isAuthenticated, isLoading, user, currentWorkspace };
 };

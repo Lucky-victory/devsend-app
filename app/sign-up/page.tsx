@@ -74,16 +74,25 @@ export default function SignupPage() {
   };
 
   const handleMagicLink = async () => {
-    if (!email) {
-      toast.error("Please enter your email address");
-      return;
-    }
-    setIsLoading(true);
-    // Simulate magic link sending
-    setTimeout(() => {
-      toast.success("Magic link sent to your email!");
-      setIsLoading(false);
-    }, 1000);
+    try {
+      if (!email) {
+        toast.error("Please enter your email address");
+        return;
+      }
+      const { data, error } = await authClient.signIn.magicLink({
+        email,
+        name: `${firstName} ${lastName}`,
+      });
+      if (error) {
+        toast.error(error.message || "Magic link failed");
+        return;
+      }
+      if (data) {
+        setIsLoading(true);
+        toast.success("Magic link sent to your email!");
+        setIsLoading(false);
+      }
+    } catch (error) {}
   };
 
   return (
