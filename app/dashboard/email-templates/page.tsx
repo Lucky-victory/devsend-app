@@ -98,13 +98,13 @@ export default function TemplatesPage() {
           </div>
           <div className="flex items-center space-x-2">
             <Button variant="outline" asChild>
-              <Link href="/dashboard/templates/visual">
+              <Link href="/dashboard/email-templates/visual">
                 <Palette className="mr-2 h-4 w-4" />
                 Visual Editor
               </Link>
             </Button>
             <Button asChild>
-              <Link href="/dashboard/templates/code">
+              <Link href="/dashboard/email-templates/code">
                 <Code className="mr-2 h-4 w-4" />
                 Code Editor
               </Link>
@@ -276,7 +276,9 @@ export default function TemplatesPage() {
                   </p>
                 </div>
                 <Button asChild>
-                  <Link href="/dashboard/templates/code">Create Template</Link>
+                  <Link href="/dashboard/email-templates/code">
+                    Create Template
+                  </Link>
                 </Button>
               </div>
             </CardContent>

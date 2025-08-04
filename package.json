@@ -12,6 +12,7 @@
     "@auth0/auth0-react": "latest",
     "@better-fetch/fetch": "^1.1.18",
     "@clerk/clerk-react": "latest",
+    "@codesandbox/sandpack-react": "^2.20.0",
     "@convex-dev/better-auth": "latest",
     "@convex-dev/resend": "latest",
     "@emotion/is-prop-valid": "latest",

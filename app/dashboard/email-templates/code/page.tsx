@@ -140,7 +140,7 @@ export default function CodeEditorPage() {
         type: "code",
         content: templateCode,
         previewData,
-        createdBy: user._id,
+        createdBy: user.userId,
       });
 
       toast.success("Template saved successfully!");
