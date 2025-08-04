@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Monitor, Smartphone, Tablet, Eye, Save } from "lucide-react";
-import { EmailEditor } from "react-email-editor";
+import EmailEditor, { EditorRef, EmailEditorProps } from "react-email-editor";
+import { render } from "react-dom";
 
 interface VisualEditorProps {
   templateId?: string;
@@ -24,7 +25,14 @@ export function VisualEditor({
     "desktop" | "tablet" | "mobile"
   >("desktop");
   const [unlayerInstance, setUnlayerInstance] = useState<any>(null);
-
+  const onReady: EmailEditorProps["onReady"] = (unlayer) => {
+    // editor is ready
+    // you can load your template here;
+    // the design json can be obtained by calling
+    // unlayer.loadDesign(callback) or unlayer.exportHtml(callback)
+    // const templateJson = { DESIGN JSON GOES HERE };
+    // unlayer.loadDesign(templateJson);
+  };
   useEffect(() => {
     // Load Unlayer script
     const script = document.createElement("script");
@@ -45,7 +53,7 @@ export function VisualEditor({
 
     unlayer.init({
       id: "editor",
-      projectId: process.env.NEXT_PUBLIC_UNLAYER_PROJECT_ID || 1234,
+      projectId: process.env.NEXT_PUBLIC_UNLAYER_PROJECT_ID || 277683,
       displayMode: "email",
       appearance: {
         theme: "dark",
@@ -195,6 +203,7 @@ export function VisualEditor({
               margin: currentDevice !== "desktop" ? "0 auto" : undefined,
             }}
           />
+          {/* <EmailEditor ref={editorRef} onReady={onReady} /> */}
           {!isLoaded && (
             <div className="flex items-center justify-center h-full">
               <div className="text-center">
