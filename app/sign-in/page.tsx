@@ -43,7 +43,7 @@ export default function LoginPage() {
       }
       if (data) {
         toast.success("Welcome back!");
-        // router.push("/dashboard");
+        router.push("/dashboard");
       }
       console.log({ data, error });
     } catch (error) {
