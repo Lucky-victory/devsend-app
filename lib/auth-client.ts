@@ -17,6 +17,6 @@ export const authClient = createAuthClient({
     twoFactorClient(),
     genericOAuthClient(),
     convexClient(),
-    crossDomainClient(),
+    // crossDomainClient(),
   ],
 });

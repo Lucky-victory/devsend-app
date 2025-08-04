@@ -1,20 +1,24 @@
 import { convexAdapter } from "@convex-dev/better-auth";
 import { convex, crossDomain } from "@convex-dev/better-auth/plugins";
-import { genericOAuth, organization, twoFactor } from "better-auth/plugins";
-import { emailOTP } from "better-auth/plugins";
+import { organization } from "better-auth/plugins";
 import {
   sendMagicLink,
   sendOTPVerification,
   sendEmailVerification,
   sendResetPassword,
 } from "../convex/email";
-import { magicLink } from "better-auth/plugins";
+import {
+  magicLink,
+  emailOTP,
+  twoFactor,
+  genericOAuth,
+} from "better-auth/plugins";
 import { betterAuth, BetterAuthOptions } from "better-auth";
 import { betterAuthComponent } from "../convex/auth";
 import { requireMutationCtx } from "@convex-dev/better-auth/utils";
 import { GenericCtx } from "../convex/_generated/server";
 
-const siteUrl = process.env.NEXT_PUBLIC_CONVEX_URL || "http://localhost:3000";
+const siteUrl = "http://localhost:3201";
 // Split out options so they can be passed to the convex plugin
 const createOptions = (ctx: GenericCtx) =>
   ({
@@ -100,9 +104,9 @@ export const createAuth = (ctx: GenericCtx) => {
     ...options,
     plugins: [
       ...options.plugins,
-      crossDomain({
-        siteUrl,
-      }),
+      //   crossDomain({
+      //     siteUrl,
+      //   }),
       // Pass in options so plugin schema inference flows through. Only required
       // for plugins that customize the user or session schema.
       // See "Some caveats":

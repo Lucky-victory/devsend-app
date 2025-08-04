@@ -57,7 +57,8 @@ export default function SignupPage() {
         },
       });
       if (error) {
-        toast.error(error.message);
+        console.log({ error });
+        toast.error(error.message || "Signup failed");
         return;
       }
       if (data) {
@@ -77,7 +78,6 @@ export default function SignupPage() {
       toast.error("Please enter your email address");
       return;
     }
-
     setIsLoading(true);
     // Simulate magic link sending
     setTimeout(() => {
@@ -171,6 +171,7 @@ export default function SignupPage() {
                 <Button
                   variant={"ghost"}
                   size={"icon"}
+                  type="button"
                   className="absolute right-2 top-1/2 -translate-y-1/2"
                   onClick={() => setShowPassword(!showPassword)}
                 >

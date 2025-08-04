@@ -5,6 +5,8 @@ import { createAuth } from "../lib/auth";
 
 const http = httpRouter();
 
-betterAuthComponent.registerRoutes(http, createAuth);
+betterAuthComponent.registerRoutes(http, createAuth, {
+  cors: true,
+});
 
 export default http;

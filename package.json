@@ -1,17 +1,15 @@
 {
-  "name": "my-v0-project",
+  "name": "devsend-app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "next dev",
+    "dev": "next dev --port=3201",
     "lint": "next lint",
     "start": "next start"
   },
   "dependencies": {
-    "@auth0/auth0-react": "latest",
     "@better-fetch/fetch": "^1.1.18",
-    "@clerk/clerk-react": "latest",
     "@convex-dev/better-auth": "^0.7.13",
     "@convex-dev/resend": "^0.1.7",
     "@emotion/is-prop-valid": "latest",

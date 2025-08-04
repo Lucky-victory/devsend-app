@@ -20,6 +20,7 @@ import type * as emails_verifyEmail from "../emails/verifyEmail.js";
 import type * as emails_verifyOTP from "../emails/verifyOTP.js";
 import type * as http from "../http.js";
 import type * as templates from "../templates.js";
+import type * as util from "../util.js";
 
 import type {
   ApiFromModules,
@@ -48,6 +49,7 @@ declare const fullApi: ApiFromModules<{
   "emails/verifyOTP": typeof emails_verifyOTP;
   http: typeof http;
   templates: typeof templates;
+  util: typeof util;
 }>;
 declare const fullApiWithMounts: typeof fullApi;
 

@@ -7,7 +7,6 @@ import {
 } from "@convex-dev/better-auth";
 import { api, components, internal } from "./_generated/api";
 import { DataModel, Id } from "./_generated/dataModel";
-import { asyncMap } from "convex-helpers";
 
 const authFunctions: AuthFunctions = internal.auth;
 const publicAuthFunctions: PublicAuthFunctions = api.auth;
@@ -15,7 +14,7 @@ const publicAuthFunctions: PublicAuthFunctions = api.auth;
 export const betterAuthComponent = new BetterAuth(components.betterAuth, {
   authFunctions,
   publicAuthFunctions,
-  verbose: false,
+  verbose: process.env.NODE_ENV === "development",
 });
 
 export const {
