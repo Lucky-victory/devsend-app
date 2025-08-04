@@ -1,40 +1,47 @@
-"use client"
+"use client";
 
-import { useEffect, useRef, useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Monitor, Smartphone, Tablet, Eye, Save } from "lucide-react"
+import { useEffect, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Monitor, Smartphone, Tablet, Eye, Save } from "lucide-react";
+import { EmailEditor } from "react-email-editor";
 
 interface VisualEditorProps {
-  templateId?: string
-  onSave?: (design: any) => void
-  onPreview?: (html: string) => void
+  templateId?: string;
+  onSave?: (design: any) => void;
+  onPreview?: (html: string) => void;
 }
 
-export function VisualEditor({ templateId, onSave, onPreview }: VisualEditorProps) {
-  const editorRef = useRef<HTMLDivElement>(null)
-  const [isLoaded, setIsLoaded] = useState(false)
-  const [currentDevice, setCurrentDevice] = useState<"desktop" | "tablet" | "mobile">("desktop")
-  const [unlayerInstance, setUnlayerInstance] = useState<any>(null)
+export function VisualEditor({
+  templateId,
+  onSave,
+  onPreview,
+}: VisualEditorProps) {
+  const editorRef = useRef<HTMLDivElement>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [currentDevice, setCurrentDevice] = useState<
+    "desktop" | "tablet" | "mobile"
+  >("desktop");
+  const [unlayerInstance, setUnlayerInstance] = useState<any>(null);
 
   useEffect(() => {
     // Load Unlayer script
-    const script = document.createElement("script")
-    script.src = "https://editor.unlayer.com/embed.js"
-    script.async = true
-    script.onload = initializeUnlayer
-    document.head.appendChild(script)
+    const script = document.createElement("script");
+    script.src = "https://editor.unlayer.com/embed.js";
+    script.async = true;
+    script.onload = initializeUnlayer;
+    document.head.appendChild(script);
 
     return () => {
-      document.head.removeChild(script)
-    }
-  }, [])
+      document.head.removeChild(script);
+    };
+  }, []);
 
   const initializeUnlayer = () => {
-    if (!editorRef.current || !window.unlayer) return
+    if (!editorRef.current || !window.unlayer) return;
 
-    const unlayer = window.unlayer
+    const unlayer = window.unlayer;
 
     unlayer.init({
       id: "editor",
@@ -82,7 +89,7 @@ export function VisualEditor({ templateId, onSave, onPreview }: VisualEditorProp
         minRows: 1,
         maxRows: 20,
       },
-    })
+    });
 
     // Load existing template if provided
     if (templateId) {
@@ -90,40 +97,40 @@ export function VisualEditor({ templateId, onSave, onPreview }: VisualEditorProp
       // unlayer.loadDesign(savedDesign)
     }
 
-    setUnlayerInstance(unlayer)
-    setIsLoaded(true)
-  }
+    setUnlayerInstance(unlayer);
+    setIsLoaded(true);
+  };
 
   const handleSave = () => {
-    if (!unlayerInstance) return
+    if (!unlayerInstance) return;
 
     unlayerInstance.saveDesign((design: any) => {
-      onSave?.(design)
-    })
-  }
+      onSave?.(design);
+    });
+  };
 
   const handleExportHtml = () => {
-    if (!unlayerInstance) return
+    if (!unlayerInstance) return;
 
     unlayerInstance.exportHtml((data: any) => {
-      const { design, html } = data
-      onPreview?.(html)
-    })
-  }
+      const { design, html } = data;
+      onPreview?.(html);
+    });
+  };
 
   const handleDeviceChange = (device: "desktop" | "tablet" | "mobile") => {
-    setCurrentDevice(device)
-    if (!unlayerInstance) return
+    setCurrentDevice(device);
+    if (!unlayerInstance) return;
 
     const widths = {
       desktop: "100%",
       tablet: "768px",
       mobile: "375px",
-    }
+    };
 
     // This would change the preview width in Unlayer
     // unlayerInstance.setDisplayMode(device)
-  }
+  };
 
   return (
     <div className="h-full flex flex-col">
@@ -179,7 +186,12 @@ export function VisualEditor({ templateId, onSave, onPreview }: VisualEditorProp
             ref={editorRef}
             className="h-full min-h-[600px]"
             style={{
-              width: currentDevice === "desktop" ? "100%" : currentDevice === "tablet" ? "768px" : "375px",
+              width:
+                currentDevice === "desktop"
+                  ? "100%"
+                  : currentDevice === "tablet"
+                    ? "768px"
+                    : "375px",
               margin: currentDevice !== "desktop" ? "0 auto" : undefined,
             }}
           />
@@ -187,19 +199,21 @@ export function VisualEditor({ templateId, onSave, onPreview }: VisualEditorProp
             <div className="flex items-center justify-center h-full">
               <div className="text-center">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-                <p className="text-muted-foreground">Loading visual editor...</p>
+                <p className="text-muted-foreground">
+                  Loading visual editor...
+                </p>
               </div>
             </div>
           )}
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
 
 // Extend window type for Unlayer
 declare global {
   interface Window {
-    unlayer: any
+    unlayer: any;
   }
 }
