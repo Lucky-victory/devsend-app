@@ -6,7 +6,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Monitor, Smartphone, Tablet, Eye, Save } from "lucide-react";
 import EmailEditor, { EditorRef, EmailEditorProps } from "react-email-editor";
-import { render } from "react-dom";
 
 interface VisualEditorProps {
   templateId?: string;
