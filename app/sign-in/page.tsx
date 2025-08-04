@@ -36,6 +36,7 @@ export default function LoginPage() {
       const { data, error } = await authClient.signIn.email({
         email,
         password,
+        callbackURL: "/dashboard",
       });
       if (error) {
         toast.error(error.message);
@@ -43,7 +44,7 @@ export default function LoginPage() {
       }
       if (data) {
         toast.success("Welcome back!");
-        router.push("/dashboard");
+        // router.push("/dashboard");
       }
       console.log({ data, error });
     } catch (error) {
@@ -58,10 +59,11 @@ export default function LoginPage() {
     try {
       const { data, error } = await authClient.signIn.social({
         provider: "google",
+        callbackURL: "/dashboard",
       });
       if (data) {
         toast.success("Welcome back!");
-        router.push("/dashboard");
+        // router.push("/dashboard");
       }
       console.log({ data, error });
     } catch (error) {

@@ -51,6 +51,7 @@ export default function SignupPage() {
         email,
         name: `${firstName} ${lastName}`,
         password,
+        callbackURL: "/dashboard",
         fetchOptions: {
           next: {
             revalidate: 0,
@@ -63,8 +64,10 @@ export default function SignupPage() {
         return;
       }
       if (data) {
-        toast.success("Account created successfully!");
-        router.push("/dashboard");
+        toast.success(
+          "Account created successfully! Please check your email for verification"
+        );
+        // router.push("/dashboard");
       }
       console.log({ data, error });
     } catch (error) {
@@ -79,10 +82,11 @@ export default function SignupPage() {
     try {
       const { data, error } = await authClient.signIn.social({
         provider: "google",
+        callbackURL: "/dashboard",
       });
       if (data) {
-        toast.success("Welcome back!");
-        router.push("/dashboard");
+        toast.success("Welcome! Please check your email for verification");
+        // router.push("/dashboard");
       }
       console.log({ data, error });
     } catch (error) {
