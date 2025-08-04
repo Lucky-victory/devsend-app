@@ -18,7 +18,7 @@ import { betterAuthComponent } from "../convex/auth";
 import { requireMutationCtx } from "@convex-dev/better-auth/utils";
 import { GenericCtx } from "../convex/_generated/server";
 
-const siteUrl = "http://localhost:3201";
+const siteUrl = process.env.CONVEX_SITE_URL || "http://localhost:3201";
 // Split out options so they can be passed to the convex plugin
 const createOptions = (ctx: GenericCtx) =>
   ({
