@@ -20,6 +20,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
+import GoogleIcon from "@/components/ui/google-icon";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -52,12 +53,20 @@ export default function LoginPage() {
     }
   };
 
-  const handleMagicLink = async () => {
-    if (!email) {
-      toast.error("Please enter your email address");
-      return;
+  const handleGoogle = async () => {
+    setIsLoading(true);
+    try {
+      const { data, error } = await authClient.signIn.social({
+        provider: "google",
+      });
+      if (data) {
+        toast.success("Welcome back!");
+        router.push("/dashboard");
+      }
+      console.log({ data, error });
+    } catch (error) {
+      toast.error("Login failed");
     }
-
     setIsLoading(true);
     // Simulate magic link sending
     setTimeout(() => {
@@ -156,11 +165,11 @@ export default function LoginPage() {
               variant="outline"
               className="w-full h-11 bg-transparent"
               size="lg"
-              onClick={handleMagicLink}
+              onClick={handleGoogle}
               disabled={isLoading}
             >
-              <Mail className="mr-2 h-4 w-4" />
-              Continue with Magic Link
+              <GoogleIcon className="mr-2 h-4 w-4" />
+              Continue with Google
             </Button>
 
             <div className="text-center text-sm">

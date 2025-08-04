@@ -22,6 +22,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { useConvexAuth, useMutation } from "convex/react";
 import { authClient } from "@/lib/auth-client";
+import GoogleIcon from "@/components/ui/google-icon";
 
 export default function SignupPage() {
   const [firstName, setFirstName] = useState("");
@@ -73,26 +74,26 @@ export default function SignupPage() {
     }
   };
 
-  const handleMagicLink = async () => {
+  const handleGoogle = async () => {
+    setIsLoading(true);
     try {
-      if (!email) {
-        toast.error("Please enter your email address");
-        return;
-      }
-      const { data, error } = await authClient.signIn.magicLink({
-        email,
-        name: `${firstName} ${lastName}`,
+      const { data, error } = await authClient.signIn.social({
+        provider: "google",
       });
-      if (error) {
-        toast.error(error.message || "Magic link failed");
-        return;
-      }
       if (data) {
-        setIsLoading(true);
-        toast.success("Magic link sent to your email!");
-        setIsLoading(false);
+        toast.success("Welcome back!");
+        router.push("/dashboard");
       }
-    } catch (error) {}
+      console.log({ data, error });
+    } catch (error) {
+      toast.error("Login failed");
+    }
+    setIsLoading(true);
+    // Simulate magic link sending
+    setTimeout(() => {
+      toast.success("Magic link sent to your email!");
+      setIsLoading(false);
+    }, 1000);
   };
 
   return (
@@ -249,11 +250,11 @@ export default function SignupPage() {
               variant="outline"
               className="w-full h-11 bg-transparent"
               size="lg"
-              onClick={handleMagicLink}
+              onClick={handleGoogle}
               disabled={isLoading}
             >
-              <Mail className="mr-2 h-4 w-4" />
-              Continue with Magic Link
+              <GoogleIcon className="mr-2 h-4 w-4" />
+              Continue with Google
             </Button>
 
             <div className="text-center text-sm">

@@ -45,12 +45,12 @@ export default function AutomationPage() {
   const { currentWorkspace, user } = useAuth();
   const workflows = useQuery(
     api.automation.getWorkflows,
-    currentWorkspace ? { workspaceId: currentWorkspace._id } : "skip"
+    currentWorkspace ? { workspaceId: currentWorkspace?._id } : "skip"
   );
 
   const abTests = useQuery(
     api.automation.getAbTests,
-    currentWorkspace ? { workspaceId: currentWorkspace._id } : "skip"
+    currentWorkspace ? { workspaceId: currentWorkspace?._id } : "skip"
   );
 
   const createWorkflow = useMutation(api.automation.createWorkflow);
@@ -60,7 +60,7 @@ export default function AutomationPage() {
 
     try {
       await createWorkflow({
-        workspaceId: currentWorkspace._id,
+        workspaceId: currentWorkspace?._id,
         ...workflowData,
         createdBy: user._id,
       });

@@ -22,6 +22,8 @@ export const useAuth = () => {
     isAuthenticated,
     isLoading,
     user,
-    currentWorkspace: currentWorkspace || {},
+    currentWorkspace:
+      currentWorkspace ||
+      ({} as ReturnType<typeof useQuery<typeof api.auth.getCurrentWorkspace>>),
   };
 };
