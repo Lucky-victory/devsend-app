@@ -9,10 +9,28 @@ import { Toaster } from "@/components/ui/sonner";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "DevSend - Developer-Centric Email Campaigns",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL!),
+  title: "DevSend - Email campaigns for developers and marketers",
   description:
-    "Intelligent and lightweight email campaign platform for developers, indie hackers, and small teams.",
-    generator: 'v0.dev'
+    "The email platform that bridges developers and marketers. Code-first where it matters, visual where it helps. Build with React components or drag-and-drop — your choice.",
+  openGraph: {
+    title: "DevSend - Email campaigns for developers and marketers",
+    description:
+      "The email platform that bridges developers and marketers. Code-first where it matters, visual where it helps. Build with React components or drag-and-drop — your choice.",
+    images: ["/og.png"],
+    type: "website",
+    url: process.env.NEXT_PUBLIC_SITE_URL!,
+    siteName: "DevSend",
+    locale: "en_US",
+    countryName: "United States",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "DevSend - Email campaigns for developers and marketers",
+    description:
+      "The email platform that bridges developers and marketers. Code-first where it matters, visual where it helps. Build with React components or drag-and-drop — your choice.",
+    images: ["/og.png"],
+  },
 };
 
 export default function RootLayout({
@@ -26,7 +44,7 @@ export default function RootLayout({
         <ConvexClientProvider>
           <ThemeProvider
             attribute="class"
-            defaultTheme="light"
+            defaultTheme="dark"
             enableSystem
             disableTransitionOnChange
           >
