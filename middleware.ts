@@ -19,7 +19,7 @@ import { NextRequest, NextResponse } from "next/server";
 //   return session;
 // };
 
-// const signInRoutes = ["/login", "/signup", "/verify-2fa"];
+// const signInRoutes = ["/sign-in", "/sign-up", "/verify-2fa"];
 
 // // Just check cookie, recommended approach
 // export default async function middleware(request: NextRequest) {
@@ -34,7 +34,7 @@ import { NextRequest, NextResponse } from "next/server";
 //   }
 
 //   if (!isSignInRoute && !sessionCookie) {
-//     return NextResponse.redirect(new URL("/login", request.url));
+//     return NextResponse.redirect(new URL("/sign-in", request.url));
 //   }
 
 //   if (isSignInRoute || request.nextUrl.pathname === "/") {

@@ -40,7 +40,7 @@ export const {
     // Create default workspace
     const workspaceId = await ctx.db.insert("workspaces", {
       name: `${user.name}'s Workspace`,
-      slug: `${user.name.toLowerCase()}-workspace-${Date.now()}`,
+      slug: `${user.name.toLowerCase().replace(/ /g, "-")}-workspace-${Date.now()}`,
       ownerId: userId,
       fromName: `${user.name}`,
       fromEmail: user.email,

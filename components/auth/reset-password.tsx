@@ -67,7 +67,7 @@ export default function ResetPassword() {
             </CardDescription>
           </CardHeader>
           <CardFooter>
-            <Link href="/login">Back to Login</Link>
+            <Link href="/sign-in">Back to Login</Link>
           </CardFooter>
         </Card>
       </div>
@@ -119,7 +119,7 @@ export default function ResetPassword() {
           </form>
         </CardContent>
         <CardFooter>
-          <Link href="/login">Back to Login</Link>
+          <Link href="/sign-in">Back to Login</Link>
         </CardFooter>
       </Card>
     </div>

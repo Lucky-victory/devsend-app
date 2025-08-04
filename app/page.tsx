@@ -62,14 +62,14 @@ export default function LandingPage() {
               Pricing
             </Link>
             <Link
-              href="/login"
+              href="/sign-in"
               className="text-sm font-medium hover:text-primary transition-colors"
             >
               Login
             </Link>
             <ThemeToggle />
             <Button asChild>
-              <Link href="/signup">Get Started</Link>
+              <Link href="/sign-up">Get Started</Link>
             </Button>
           </nav>
         </div>
@@ -111,7 +111,7 @@ export default function LandingPage() {
             variants={fadeInUp}
           >
             <Button size="lg" asChild className="text-base">
-              <Link href="/signup">
+              <Link href="/sign-up">
                 Start Building <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
@@ -318,7 +318,7 @@ export default function LandingPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
-                <Link href="/signup">
+                <Link href="/sign-up">
                   Start Free Trial <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>

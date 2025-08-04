@@ -212,7 +212,7 @@ export default function TwoFactorVerification() {
             className="w-full"
             variant="outline"
             disabled={loading}
-            onClick={() => router.push("/login")}
+            onClick={() => router.push("/sign-in")}
           >
             Cancel
           </Button>
