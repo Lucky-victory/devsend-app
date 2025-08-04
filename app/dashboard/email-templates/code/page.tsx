@@ -19,6 +19,7 @@ import {
   validateTemplateCode,
 } from "@/lib/email-compiler";
 import { toast } from "sonner";
+import MonacoEditor from "@monaco-editor/react";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -279,6 +280,12 @@ export default function CodeEditorPage() {
                   placeholder="Write your React email template here..."
                 />
               </div>
+              <MonacoEditor
+                language="typescript"
+                theme="vs-dark"
+                value={templateCode}
+                onChange={(value) => setTemplateCode(value || "")}
+              />
             </CardContent>
           </Card>
         </motion.div>
