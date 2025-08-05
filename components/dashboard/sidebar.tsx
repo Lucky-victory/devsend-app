@@ -23,6 +23,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useSidebarContext } from "@/app/dashboard/state";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: Home },
@@ -34,9 +35,10 @@ const navigation = [
 ];
 
 export function DashboardSidebar() {
-  const [collapsed, setCollapsed] = useState(false);
+  // const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
-
+  const { isCollapsed: collapsed, setIsCollapsed: setCollapsed } =
+    useSidebarContext();
   return (
     <TooltipProvider>
       <motion.div
@@ -47,6 +49,7 @@ export function DashboardSidebar() {
         animate={{ width: collapsed ? 64 : 256 }}
       >
         {/* Header */}
+
         <div className="flex h-16 items-center justify-between px-4 border-b">
           {!collapsed && (
             <div className="flex items-center space-x-2">

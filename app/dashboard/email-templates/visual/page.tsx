@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import Link from "next/link";
 import { VisualEditor } from "@/components/email-builder/visual-editor";
-import { useAuth } from "@/hooks/use-auth";
+import { useAuth } from "@/app/providers/auth";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { toast } from "sonner";

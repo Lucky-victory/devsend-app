@@ -49,7 +49,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { ImportDialog } from "@/components/contacts/import-dialog";
-import { useAuth } from "@/hooks/use-auth";
+import { useAuth } from "@/app/providers/auth";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { exportContactsToCSV } from "@/lib/csv-processor";

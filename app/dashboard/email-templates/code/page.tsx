@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import { useAuth } from "@/hooks/use-auth";
+import { useAuth } from "@/app/providers/auth";
 import { useConvex } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import {
@@ -20,6 +20,7 @@ import {
 } from "@/lib/email-compiler";
 import { toast } from "sonner";
 import MonacoEditor from "@monaco-editor/react";
+import { useSidebarContext } from "../../state";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -90,6 +91,7 @@ export default function CodeEditorPage() {
   const [previewData, setPreviewData] = useState(
     '{"firstName": "John", "companyName": "DevSend"}'
   );
+  const { isCollapsed, setIsCollapsed } = useSidebarContext();
   const [compiledTemplate, setCompiledTemplate] = useState<any>(null);
   const [isCompiling, setIsCompiling] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -97,6 +99,11 @@ export default function CodeEditorPage() {
   const { currentWorkspace, user } = useAuth();
   const convex = useConvex();
 
+  useEffect(() => {
+    if (!isCollapsed) {
+      setIsCollapsed(true);
+    }
+  }, [isCollapsed]);
   // Compile template when code or preview data changes
   useEffect(() => {
     const compileTemplate = async () => {
@@ -284,6 +291,7 @@ export default function CodeEditorPage() {
                 language="typescript"
                 theme="vs-dark"
                 value={templateCode}
+                className="h-120"
                 onChange={(value) => setTemplateCode(value || "")}
               />
             </CardContent>

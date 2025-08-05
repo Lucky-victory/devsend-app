@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
-import { useAuth } from "@/hooks/use-auth";
+import { useAuth } from "@/app/providers/auth";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { toast } from "sonner";
@@ -163,13 +163,17 @@ export default function TemplatesPage() {
                 />
                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-t-lg flex items-center justify-center space-x-2">
                   <Button size="sm" variant="secondary" asChild>
-                    <Link href={`/dashboard/templates/${template._id}/preview`}>
+                    <Link
+                      href={`/dashboard/email-templates/${template._id}/preview`}
+                    >
                       <Eye className="h-4 w-4 mr-1" />
                       Preview
                     </Link>
                   </Button>
                   <Button size="sm" variant="secondary" asChild>
-                    <Link href={`/dashboard/templates/${template._id}/edit`}>
+                    <Link
+                      href={`/dashboard/email-templates/${template._id}/edit`}
+                    >
                       <Edit className="h-4 w-4 mr-1" />
                       Edit
                     </Link>
