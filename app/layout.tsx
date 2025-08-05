@@ -30,6 +30,7 @@ export const metadata: Metadata = {
       "The email platform that bridges developers and marketers. Code-first where it matters, visual where it helps. Build with React components or drag-and-drop — your choice.",
     images: ["/og.png"],
   },
+    generator: 'v0.dev'
 };
 
 export default function RootLayout({
