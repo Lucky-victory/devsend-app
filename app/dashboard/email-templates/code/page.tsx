@@ -272,14 +272,14 @@ export default function CodeEditorPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="relative">
+              {/* <div className="relative">
                 <Textarea
                   value={templateCode}
                   onChange={(e) => setTemplateCode(e.target.value)}
                   className="font-mono text-sm min-h-[500px] resize-none"
                   placeholder="Write your React email template here..."
                 />
-              </div>
+              </div> */}
               <MonacoEditor
                 language="typescript"
                 theme="vs-dark"
