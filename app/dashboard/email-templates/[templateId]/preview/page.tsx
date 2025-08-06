@@ -1,116 +1,146 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
-import { ArrowLeft, Monitor, Smartphone, Tablet, Send, Copy, Download } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import Link from "next/link"
-import { useAuth } from "@/app/providers/auth"
-import { useQuery } from "convex/react"
-import { api } from "@/convex/_generated/api"
-import { compileEmailTemplate } from "@/lib/email-compiler"
-import { toast } from "sonner"
+import React, { useState, useEffect, use } from "react";
+import { motion } from "framer-motion";
+import {
+  ArrowLeft,
+  Monitor,
+  Smartphone,
+  Tablet,
+  Send,
+  Copy,
+  Download,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import Link from "next/link";
+import { useAuth } from "@/app/providers/auth";
+import { useAction, useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { compileEmailTemplate } from "@/lib/email-compiler";
+import { toast } from "sonner";
+import { sendEmail, sendTestEmail } from "@/convex/email";
+import { action } from "@/convex/_generated/server";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
   transition: { duration: 0.5 },
-}
+};
 
 interface PreviewPageProps {
   params: {
-    templateId: string
-  }
+    templateId: string;
+  };
 }
 
-export default function PreviewPage({ params }: PreviewPageProps) {
-  const [currentDevice, setCurrentDevice] = useState<"desktop" | "tablet" | "mobile">("desktop")
-  const [compiledHtml, setCompiledHtml] = useState<string>("")
-  const [testEmail, setTestEmail] = useState("")
-  const [previewData, setPreviewData] = useState('{"firstName": "John", "companyName": "DevSend"}')
-  const { currentWorkspace } = useAuth()
-
-  const template = useQuery(api.templates.getTemplate, { templateId: params.templateId as any })
+export default function PreviewPage({ params: _params }: PreviewPageProps) {
+  const params = use(_params as any) as PreviewPageProps["params"];
+  const [currentDevice, setCurrentDevice] = useState<
+    "desktop" | "tablet" | "mobile"
+  >("desktop");
+  const [compiledHtml, setCompiledHtml] = useState<string>("");
+  const [testEmail, setTestEmail] = useState("");
+  const [previewData, setPreviewData] = useState(
+    '{"firstName": "John", "companyName": "DevSend"}'
+  );
+  const { currentWorkspace } = useAuth();
+  const sendTest = useAction(api.email.sendTestEmail);
+  const template = useQuery(api.templates.getTemplate, {
+    templateId: params.templateId as any,
+  });
 
   useEffect(() => {
     if (template && template.content) {
-      compileTemplate()
+      compileTemplate();
     }
-  }, [template, previewData])
+  }, [template, previewData]);
 
   const compileTemplate = async () => {
-    if (!template) return
+    if (!template) return;
 
     try {
-      let parsedData = {}
+      let parsedData = {};
       try {
-        parsedData = JSON.parse(previewData)
+        parsedData = JSON.parse(previewData);
       } catch (e) {
-        parsedData = {}
+        parsedData = {};
       }
 
       if (template.type === "code") {
-        const compiled = await compileEmailTemplate(template.content, parsedData)
-        setCompiledHtml(compiled.html)
+        const compiled = await compileEmailTemplate(
+          template.content,
+          parsedData
+        );
+        setCompiledHtml(compiled.html);
       } else {
         // For visual templates, the content is already HTML or design JSON
-        setCompiledHtml(template.content)
+        setCompiledHtml(template.content);
       }
     } catch (error) {
-      console.error("Failed to compile template:", error)
-      toast.error("Failed to compile template")
+      console.error("Failed to compile template:", error);
+      toast.error("Failed to compile template");
     }
-  }
+  };
 
   const handleSendTest = async () => {
     if (!testEmail) {
-      toast.error("Please enter a test email address")
-      return
+      toast.error("Please enter a test email address");
+      return;
     }
 
     try {
-      // In a real app, you'd call your email sending API
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-      toast.success(`Test email sent to ${testEmail}!`)
+      await sendTest({
+        to: testEmail,
+        subject: "Testing Template",
+        html: compiledHtml,
+      });
+
+      toast.success(`Test email sent to ${testEmail}!`);
     } catch (error) {
-      toast.error("Failed to send test email")
+      toast.error("Failed to send test email");
     }
-  }
+  };
 
   const handleCopyHtml = () => {
-    navigator.clipboard.writeText(compiledHtml)
-    toast.success("HTML copied to clipboard!")
-  }
+    navigator.clipboard.writeText(compiledHtml);
+    toast.success("HTML copied to clipboard!");
+  };
 
   const handleDownloadHtml = () => {
-    const blob = new Blob([compiledHtml], { type: "text/html" })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement("a")
-    a.href = url
-    a.download = `${template?.name || "template"}.html`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
-    toast.success("HTML file downloaded!")
-  }
+    const blob = new Blob([compiledHtml], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${template?.name || "template"}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast.success("HTML file downloaded!");
+  };
 
   const getDeviceWidth = () => {
     switch (currentDevice) {
       case "tablet":
-        return "768px"
+        return "768px";
       case "mobile":
-        return "375px"
+        return "375px";
       default:
-        return "100%"
+        return "100%";
     }
-  }
+  };
 
   if (!template) {
     return (
@@ -120,7 +150,7 @@ export default function PreviewPage({ params }: PreviewPageProps) {
           <p className="text-muted-foreground">Loading template...</p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -140,17 +170,29 @@ export default function PreviewPage({ params }: PreviewPageProps) {
               </Link>
             </Button>
             <div>
-              <h1 className="text-3xl font-bold tracking-tight">{template.name}</h1>
-              <p className="text-muted-foreground">Preview your email template</p>
+              <h1 className="text-3xl font-bold tracking-tight">
+                {template.name}
+              </h1>
+              <p className="text-muted-foreground">
+                Preview your email template
+              </p>
             </div>
           </div>
           <div className="flex items-center space-x-2">
             <Badge variant={template.type === "code" ? "default" : "secondary"}>
               {template.type === "code" ? "Code" : "Visual"}
             </Badge>
-            <Badge variant={template.status === "published" ? "default" : "outline"}>{template.status}</Badge>
+            <Badge
+              variant={template.status === "published" ? "default" : "outline"}
+            >
+              {template.status}
+            </Badge>
             <Button variant="outline" asChild>
-              <Link href={`/dashboard/email-templates/${params.templateId}/edit`}>Edit Template</Link>
+              <Link
+                href={`/dashboard/email-templates/${params.templateId}/edit`}
+              >
+                Edit Template
+              </Link>
             </Button>
           </div>
         </div>
@@ -250,12 +292,20 @@ export default function PreviewPage({ params }: PreviewPageProps) {
                 </DialogContent>
               </Dialog>
 
-              <Button variant="outline" onClick={handleCopyHtml} className="w-full bg-transparent">
+              <Button
+                variant="outline"
+                onClick={handleCopyHtml}
+                className="w-full bg-transparent"
+              >
                 <Copy className="mr-2 h-4 w-4" />
                 Copy HTML
               </Button>
 
-              <Button variant="outline" onClick={handleDownloadHtml} className="w-full bg-transparent">
+              <Button
+                variant="outline"
+                onClick={handleDownloadHtml}
+                className="w-full bg-transparent"
+              >
                 <Download className="mr-2 h-4 w-4" />
                 Download HTML
               </Button>
@@ -283,7 +333,8 @@ export default function PreviewPage({ params }: PreviewPageProps) {
                   className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transition-all duration-300"
                   style={{
                     width: getDeviceWidth(),
-                    maxWidth: currentDevice === "desktop" ? "800px" : getDeviceWidth(),
+                    maxWidth:
+                      currentDevice === "desktop" ? "800px" : getDeviceWidth(),
                   }}
                 >
                   {compiledHtml ? (
@@ -297,7 +348,9 @@ export default function PreviewPage({ params }: PreviewPageProps) {
                     <div className="flex items-center justify-center h-[700px]">
                       <div className="text-center">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-                        <p className="text-muted-foreground">Compiling template...</p>
+                        <p className="text-muted-foreground">
+                          Compiling template...
+                        </p>
                       </div>
                     </div>
                   )}
@@ -308,5 +361,5 @@ export default function PreviewPage({ params }: PreviewPageProps) {
         </motion.div>
       </div>
     </motion.div>
-  )
+  );
 }

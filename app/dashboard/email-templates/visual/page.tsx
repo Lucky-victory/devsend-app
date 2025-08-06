@@ -16,7 +16,7 @@ import {
 import Link from "next/link";
 import { VisualEditor } from "@/components/email-builder/visual-editor";
 import { useAuth } from "@/app/providers/auth";
-import { useMutation } from "convex/react";
+import { useAction, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { toast } from "sonner";
 
@@ -36,7 +36,7 @@ export default function VisualEditorPage() {
   const [isSendingTest, setIsSendingTest] = useState(false);
   const { currentWorkspace, user } = useAuth();
   const createTemplate = useMutation(api.templates.createTemplate);
-
+  const sendTest = useAction(api.email.sendTestEmail);
   const handleSave = async (design: any) => {
     if (!currentWorkspace || !user) {
       toast.error("Please log in to save templates");
@@ -50,7 +50,7 @@ export default function VisualEditorPage() {
         name: templateName,
         type: "visual",
         content: JSON.stringify(design),
-        createdBy: user._id,
+        createdBy: user.userId,
       });
 
       setTemplateDesign(design);
@@ -74,10 +74,16 @@ export default function VisualEditorPage() {
     }
 
     setIsSendingTest(true);
+    await sendTest({
+      to: testEmail,
+      html: previewHtml,
+      subject: templateName,
+    });
     try {
       // In a real app, you'd call your email sending API
       await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate API call
       toast.success(`Test email sent to ${testEmail}!`);
+      setTestEmail("");
     } catch (error) {
       toast.error("Failed to send test email");
     } finally {

@@ -6,9 +6,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Monitor, Smartphone, Tablet, Eye, Save } from "lucide-react";
 import EmailEditor, { EditorRef, EmailEditorProps } from "react-email-editor";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
 
 interface VisualEditorProps {
-  templateId?: string;
+  templateId?: Id<"templates">;
   onSave?: (design: any) => void;
   onPreview?: (html: string) => void;
 }
@@ -24,6 +27,10 @@ export function VisualEditor({
     "desktop" | "tablet" | "mobile"
   >("desktop");
   const [unlayerInstance, setUnlayerInstance] = useState<any>(null);
+  const template = useQuery(
+    api.templates.getTemplate,
+    templateId ? { templateId } : "skip"
+  );
   const onReady: EmailEditorProps["onReady"] = (unlayer) => {
     // editor is ready
     // you can load your template here;
@@ -99,9 +106,9 @@ export function VisualEditor({
     });
 
     // Load existing template if provided
-    if (templateId) {
+    if (templateId && template) {
       // In a real app, you'd load the template design from your database
-      // unlayer.loadDesign(savedDesign)
+      unlayer.loadDesign(JSON.parse(template.content));
     }
 
     setUnlayerInstance(unlayer);
@@ -134,9 +141,6 @@ export function VisualEditor({
       tablet: "768px",
       mobile: "375px",
     };
-
-    // This would change the preview width in Unlayer
-    // unlayerInstance.setDisplayMode(device)
   };
 
   return (
